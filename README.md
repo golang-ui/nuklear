@@ -5,6 +5,21 @@ All the binding code has automatically been generated with rules defined in [nk.
 
 An idiomatic wrapper package isn't coming I guess, because it will require strong interest in further development and I have no time for that now. The `nk` package is fine for the start, then we'll figure out something better that just a wrapper.
 
+### Features (plain C version)
+
+* Immediate mode graphical user interface toolkit
+* Single header library
+* Written in C89 (ANSI C)
+* Small codebase (~15kLOC)
+* Focus on portability, efficiency and simplicity
+* No dependencies (not even the standard library if not wanted)
+* Fully skinnable and customizable
+* Low memory footprint with total memory control if needed or wanted
+* UTF-8 support
+* No global or hidden state
+* Customizable library modules (you can compile and use only what you need)
+* Optional font baker and vertex buffer output
+
 ### Installation of nk
 
 ```bash
