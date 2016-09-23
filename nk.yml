@@ -11,6 +11,7 @@ GENERATOR:
       -DNK_INCLUDE_DEFAULT_ALLOCATOR
       -DNK_INCLUDE_FONT_BAKING
       -DNK_INCLUDE_DEFAULT_FONT
+      -Wno-implicit-function-declaration
     ]}
 
 PARSER: 
@@ -38,8 +39,24 @@ TRANSLATOR:
     - {target: "nk_", self: raw}
     - {target: "SDL_", self: raw}
     - {target: "glfw", self: raw}
+  TypeTips:
+    function:
+      - {target: _(hsv|rgb)_bv$, tips: [plain,plain,plain,0]}
+      - {target: _(hsv|rgb)a_bv$, tips: [plain,plain,plain,0]}
+      - {target: _(hsv|rgb)_b$, tips: [plain,plain,plain,0]}
+      - {target: _(hsv|rgb)a_b$, tips: [plain,plain,plain,0]}
   PtrTips:
     function:
+      - {target: "_color_fv$", tips: [arr,0]}
+      - {target: "_color_dv$", tips: [arr,0]}
+      - {target: "_color_hex_rgba$", tips: [arr,0]}
+      - {target: "_color_hex_rgb$", tips: [arr,0]}
+      - {target: "_color_hsv_iv$", tips: [arr,0]}
+      - {target: "_color_hsv_bv$", tips: [arr,0]}
+      - {target: "_color_hsv_fv$", tips: [arr,0]}
+      - {target: "_color_hsva_iv$", tips: [arr,0]}
+      - {target: "_color_hsva_bv$", tips: [arr,0]}
+      - {target: "_color_hsva_fv$", tips: [arr,0]}
       - {target: "nk_", tips: [sref,sref,sref,sref,sref,sref]} # defaults
   Rules: 
     global: 
@@ -70,10 +87,6 @@ TRANSLATOR:
       - {action: replace, from: "_rgb$", to: _color_format_RGB}
       - {action: replace, from: "_rgba$", to: _color_format_RGBA}
     function:
-      - {action: ignore, from: _(hsv|rgb)_bv$}
-      - {action: ignore, from: _(hsv|rgb)a_bv$}
-      - {action: ignore, from: _(hsv|rgb)_b$}
-      - {action: ignore, from: _(hsv|rgb)a_b$}
       - {action: ignore, from: "(?i)nk_str"}
       - {action: ignore, from: "_input_glyph"}
     type:   
