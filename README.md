@@ -8,8 +8,10 @@ An idiomatic wrapper package isn't coming I guess, because it will require stron
 ### Installation of nk
 
 ```bash
-$ brew install glfw # must be >= 3.2
+$ brew install glfw3 # must be >= 3.2
 $ go get github.com/golang-ui/nuklear/nk
+
+# consult your distro package archives for GLFW if you are under Linux
 ```
 
 ### Demo
