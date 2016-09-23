@@ -14,7 +14,7 @@ $ go get github.com/golang-ui/nuklear/nk
 
 ### Demo
 
-There is an example app that shows the usage of Nuklear GUI library, based on the official demos.
+There is an example app [nk-example](https://github.com/golang-ui/nuklear/blob/master/cmd/nk-example/main.go) that shows the usage of Nuklear GUI library, based on the official demos.
 
 ```bash
 $ go get github.com/golang-ui/nuklear/cmd/nk-example
