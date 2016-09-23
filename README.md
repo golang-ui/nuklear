@@ -18,6 +18,12 @@ There is an example app that shows the usage of Nuklear GUI library, based on th
 
 ```bash
 $ go get github.com/golang-ui/nuklear/cmd/nk-example
+
+$ nk-example
+2016/09/23 23:13:09 glfw: created window 400x500
+2016/09/23 23:13:10 [INFO] button pressed!
+2016/09/23 23:13:10 [INFO] button pressed!
+2016/09/23 23:13:10 [INFO] button pressed!
 ```
 
 <img alt="demo screenshot nuklear" src="assets/demo.png" width="500"/>
