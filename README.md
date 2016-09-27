@@ -45,6 +45,10 @@ $ nk-example
 
 <img alt="demo screenshot nuklear" src="assets/demo.png" width="500"/>
 
+Another more realistic Golang app that uses Nuklear to do its GUI, [a simple WebM player](https://github.com/xlab/libvpx-go):
+
+<a href="https://www.youtube.com/watch?v=5kj5ApnhPAE"><img alt="nuklear screenshot webm" src="assets/demo2.png" width="800"/></a>
+
 ### Rebuilding the package
 
 You will need to get the [cgogen](https://git.io/cgogen) tool installed first.
