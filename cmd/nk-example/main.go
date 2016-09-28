@@ -7,7 +7,7 @@ import (
 	"unsafe"
 
 	"github.com/go-gl/gl/v3.3-core/gl"
-	"github.com/golang-ui/glfw"
+	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/golang-ui/nuklear/nk"
 	"github.com/xlab/closer"
 )
@@ -25,31 +25,29 @@ func init() {
 }
 
 func main() {
-	glfw.SetErrorCallback(onError)
-	if ok := b(glfw.Init()); !ok {
-		closer.Fatalln("glfw: init failed")
+	if err := glfw.Init(); err != nil {
+		closer.Fatalln(err)
 	}
-
 	glfw.WindowHint(glfw.ContextVersionMajor, 3)
 	glfw.WindowHint(glfw.ContextVersionMinor, 3)
-	glfw.WindowHint(glfw.OpenglProfile, glfw.OpenglCoreProfile)
-	glfw.WindowHint(glfw.OpenglForwardCompat, glfw.True)
-	win := glfw.CreateWindow(winWidth, winHeight, "Nuklear Demo\x00", nil, nil)
-	if win == nil {
-		closer.Fatalln("glfw: window creation failed")
+	glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
+	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
+	win, err := glfw.CreateWindow(winWidth, winHeight, "Nuklear Demo", nil, nil)
+	if err != nil {
+		closer.Fatalln(err)
 	}
-	glfw.MakeContextCurrent(win)
+	win.MakeContextCurrent()
 
-	var width, height int32
-	glfw.GetWindowSize(win, &width, &height)
+	width, height := win.GetSize()
 	log.Printf("glfw: created window %dx%d", width, height)
 
 	if err := gl.Init(); err != nil {
 		closer.Fatalln("opengl: init failed:", err)
 	}
-	gl.Viewport(0, 0, width, height)
+	gl.Viewport(0, 0, int32(width), int32(height))
 
-	ctx := nk.NkGLFW3Init((*nk.GLFWwindow)(unsafe.Pointer(win)), nk.GLFW3InstallCallbacks)
+	glfwWin := unsafe.Pointer(win.GLFWWindow())
+	ctx := nk.NkGLFW3Init((*nk.GLFWwindow)(glfwWin), nk.GLFW3InstallCallbacks)
 
 	atlas := nk.NewFontAtlas()
 	nk.NkGLFW3FontStashBegin(&atlas)
@@ -79,7 +77,7 @@ func main() {
 			close(doneC)
 			return
 		case <-fpsTicker.C:
-			if b(glfw.WindowShouldClose(win)) {
+			if win.ShouldClose() {
 				close(exitC)
 				continue
 			}
@@ -137,13 +135,12 @@ func gfxMain(win *glfw.Window, ctx *nk.Context, state *State) {
 	// Render
 	bg := []float32{38, 38, 38, 255}
 	nk.NkColorFv(bg, state.bgColor)
-	var width, height int32
-	glfw.GetWindowSize(win, &width, &height)
-	gl.Viewport(0, 0, width, height)
+	width, height := win.GetSize()
+	gl.Viewport(0, 0, int32(width), int32(height))
 	gl.Clear(gl.COLOR_BUFFER_BIT)
 	gl.ClearColor(bg[0], bg[1], bg[2], bg[3])
 	nk.NkGLFW3Render(nk.AntiAliasingOn, maxVertexBuffer, maxElementBuffer)
-	glfw.SwapBuffers(win)
+	win.SwapBuffers()
 }
 
 type Option uint8
