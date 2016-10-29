@@ -6,7 +6,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/go-gl/gl/v3.3-core/gl"
+	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/golang-ui/nuklear/nk"
 	"github.com/xlab/closer"
@@ -28,10 +28,10 @@ func main() {
 	if err := glfw.Init(); err != nil {
 		closer.Fatalln(err)
 	}
-	glfw.WindowHint(glfw.ContextVersionMajor, 3)
-	glfw.WindowHint(glfw.ContextVersionMinor, 3)
-	glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
-	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
+	glfw.WindowHint(glfw.ContextVersionMajor, 2)
+	glfw.WindowHint(glfw.ContextVersionMinor, 1)
+	// glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile) // requires >= 3.2
+	// glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True) // requires >= 3.0
 	win, err := glfw.CreateWindow(winWidth, winHeight, "Nuklear Demo", nil, nil)
 	if err != nil {
 		closer.Fatalln(err)
