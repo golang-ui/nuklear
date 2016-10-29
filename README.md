@@ -20,7 +20,20 @@ An idiomatic wrapper package isn't coming I guess, because it will require stron
 * Customizable library modules (you can compile and use only what you need)
 * Optional font baker and vertex buffer output
 
+#### About nuklear.h
+
+This is a minimal state immediate mode graphical user interface single header
+toolkit written in ANSI C and licensed under public domain.
+It was designed as a simple embeddable user interface for application and does
+not have any dependencies, a default renderbackend or OS window and input handling
+but instead provides a very modular library approach by using simple input state
+for input and draw commands describing primitive shapes as output.
+So instead of providing a layered library that tries to abstract over a number
+of platform and render backends it only focuses on the actual UI.
+
 ### Installation of nk
+
+#### OS X
 
 ```bash
 $ brew install glfw3 # must be >= 3.2
@@ -28,6 +41,30 @@ $ go get github.com/golang-ui/nuklear/nk
 
 # consult your distro package archives for GLFW if you are under Linux
 ```
+
+Both OpenGL 2.1 and OpenGL 3.3 contexts are working fine, but by default OpenGL 2.1 is used.
+
+#### Windows
+
+1. Get MinGW compiler toolchain and MSYS via [MinGW installer](https://sourceforge.net/projects/mingw/files/latest/download);
+2. Get GLFW 3.2.1 pre-built distro from the official site http://www.glfw.org/;
+3. Unpack GLFW in some simple location on `C:\`;
+4. Open MSYS shell (usually `C:\MinGW\msys\1.0\msys.bat`);
+
+Then everything should go smooth:
+```
+$ go version
+go version go1.6.2 windows/386
+
+$ gcc -v
+COLLECT_GCC=C:\MinGW\bin\gcc.exe
+Thread model: posix
+gcc version 5.3.0 (GCC)
+
+$ CGO_CFLAGS="-I/c/dev/glfw-3.2.1/include" CGO_LDFLAGS="-L/c/dev/glfw-3.2.1/lib-mingw" go install github.com/golang-ui/nuklear/nk
+```
+
+See a [screenshot](https://cl.ly/1r0j2Y3D2I2W/Screen%20Shot%202016-10-29%20at%2015.11.24.png) of running [cmd/nk-example](/cmd/nk-example). The OpenGL 2.1 context backend works fine under Windows 7.
 
 ### Demo
 
