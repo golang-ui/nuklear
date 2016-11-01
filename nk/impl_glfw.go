@@ -12,7 +12,7 @@ package nk
 #cgo linux,!wayland LDFLAGS: -lglfw -lGL -lX11 -lXrandr -lXxf86vm -lXi -lXcursor -lm -lXinerama -ldl -lrt
 #cgo linux,wayland LDFLAGS: -lglfw -lGL -lX11 -lXrandr -lXxf86vm -lXi -lXcursor -lm -lXinerama -ldl -lrt
 #cgo darwin LDFLAGS: -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo -lm
-#cgo windows LDFLAGS: -lglfw3 -lopengl32 -lgdi32 -lm
+#cgo windows LDFLAGS: -lglfw3 -lopengl32 -lgdi32 -lm -Wl,--allow-multiple-definition
 #cgo freebsd,!wayland LDFLAGS: -lGL -lX11 -lXrandr -lXxf86vm -lXi -lXcursor -lm -lXinerama
 #cgo freebsd,wayland LDFLAGS: -lGL -lX11 -lXrandr -lXxf86vm -lXi -lXcursor -lm -lXinerama
 

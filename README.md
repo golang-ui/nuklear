@@ -33,6 +33,13 @@ of platform and render backends it only focuses on the actual UI.
 
 ### Installation of nk
 
+Supported platforms are:
+
+* Windows 32-bit
+* Windows 64-bit
+* OS X
+* Linux
+
 #### OS X
 
 ```bash
