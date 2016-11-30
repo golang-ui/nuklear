@@ -91,9 +91,8 @@ func gfxMain(win *glfw.Window, ctx *nk.Context, state *State) {
 	nk.NkGLFW3NewFrame()
 
 	// Layout
-	panel := nk.NewPanel()
 	bounds := nk.NkRect(50, 50, 230, 250)
-	update := nk.NkBegin(ctx, panel, s("Demo"), bounds,
+	update := nk.NkBegin(ctx, s("Demo"), bounds,
 		nk.WindowBorder|nk.WindowMovable|nk.WindowScalable|nk.WindowMinimizable|nk.WindowTitle)
 
 	if update > 0 {
@@ -111,12 +110,11 @@ func gfxMain(win *glfw.Window, ctx *nk.Context, state *State) {
 		nk.NkLayoutRowDynamic(ctx, 25, 1)
 		nk.NkPropertyInt(ctx, s("Compression:"), 0, &state.prop, 100, 10, 1)
 		{
-			combo := nk.NewPanel()
 			nk.NkLayoutRowDynamic(ctx, 20, 1)
 			nk.NkLabel(ctx, s("background:"), nk.TextLeft)
 			nk.NkLayoutRowDynamic(ctx, 25, 1)
 			size := nk.NkVec2(nk.NkWidgetWidth(ctx), 400)
-			if nk.NkComboBeginColor(ctx, combo, state.bgColor, size) > 0 {
+			if nk.NkComboBeginColor(ctx, state.bgColor, size) > 0 {
 				nk.NkLayoutRowDynamic(ctx, 120, 1)
 				state.bgColor = nk.NkColorPicker(ctx, state.bgColor, nk.ColorFormatRGBA)
 				nk.NkLayoutRowDynamic(ctx, 25, 1)
