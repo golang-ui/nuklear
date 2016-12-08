@@ -43,7 +43,7 @@ Supported platforms are:
 #### OS X
 
 ```bash
-$ brew install glfw3 # must be >= 3.2
+$ brew install --without-shared-library glfw3 # must be >= 3.2
 $ go get github.com/golang-ui/nuklear/nk
 
 # consult your distro package archives for GLFW if you are under Linux
