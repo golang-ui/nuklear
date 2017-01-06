@@ -19,7 +19,7 @@ import (
 	"runtime"
 	"unsafe"
 
-	"github.com/go-gl/gl/v3.3-core/gl"
+	"github.com/go-gl/gl/v3.2-core/gl"
 )
 
 func NkGLFW3Render(aa AntiAliasing, maxVertexBuffer, maxElementBuffer int) {
