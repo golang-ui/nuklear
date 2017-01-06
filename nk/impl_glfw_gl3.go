@@ -22,7 +22,7 @@ import (
 	"github.com/go-gl/gl/v3.2-core/gl"
 )
 
-func NkGLFW3Render(aa AntiAliasing, maxVertexBuffer, maxElementBuffer int) {
+func NkPlatformRender(aa AntiAliasing, maxVertexBuffer, maxElementBuffer int) {
 	dev := state.ogl
 	ortho := [4][4]float32{
 		{2.0, 0.0, 0.0, 0.0},
@@ -77,8 +77,8 @@ func NkGLFW3Render(aa AntiAliasing, maxVertexBuffer, maxElementBuffer int) {
 					Offset:    Size(unsafe.Offsetof(emptyVertex.col)),
 				}, VertexLayoutEnd,
 			},
-			VertexSize:      Size(glfwVertexSize),
-			VertexAlignment: Size(glfwVertexAlign),
+			VertexSize:      Size(platformVertexSize),
+			VertexAlignment: Size(platformVertexAlign),
 			Null:            dev.null,
 
 			CircleSegmentCount: 22,
@@ -121,8 +121,6 @@ func NkGLFW3Render(aa AntiAliasing, maxVertexBuffer, maxElementBuffer int) {
 		})
 
 		NkClear(state.ctx)
-		NkBufferFree(vbuf)
-		NkBufferFree(ebuf)
 	}
 
 	// default GL state
@@ -169,7 +167,7 @@ func deviceCreate() {
 
 	{
 		// buffer setup
-		vs := int32(glfwVertexSize)
+		vs := int32(platformVertexSize)
 		vp := unsafe.Offsetof(emptyVertex.position)
 		vt := unsafe.Offsetof(emptyVertex.uv)
 		vc := unsafe.Offsetof(emptyVertex.col)
@@ -255,11 +253,11 @@ void main(){
    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);
 }`
 
-var state = &glfwState{
-	ogl: &glfwDevice{},
+var state = &platformState{
+	ogl: &platformDevice{},
 }
 
-type glfwDevice struct {
+type platformDevice struct {
 	cmds *Buffer
 	null DrawNullTexture
 

@@ -16,16 +16,16 @@ import (
 	"github.com/go-gl/glfw/v3.2/glfw"
 )
 
-type GLFW3InitOption int
+type PlatformInitOption int
 
 const (
-	GLFW3Default GLFW3InitOption = iota
-	GLFW3InstallCallbacks
+	PlatformDefault PlatformInitOption = iota
+	PlatformInstallCallbacks
 )
 
-func NkGLFW3Init(win *glfw.Window, opt GLFW3InitOption) *Context {
+func NkPlatformInit(win *glfw.Window, opt PlatformInitOption) *Context {
 	state.win = win
-	if opt == GLFW3InstallCallbacks {
+	if opt == PlatformInstallCallbacks {
 		win.SetScrollCallback(func(w *glfw.Window, xoff float64, yoff float64) {
 			state.scroll += float32(yoff)
 		})
@@ -47,21 +47,21 @@ func NkGLFW3Init(win *glfw.Window, opt GLFW3InitOption) *Context {
 	// state.ctx.clip.userdata = nk_handle_ptr(0);
 }
 
-func NkGLFW3Shutdown() {
+func NkPlatformShutdown() {
 	NkFontAtlasClear(state.atlas)
 	NkFree(state.ctx)
 	deviceDestroy()
 	state = nil
 }
 
-func NkGLFW3FontStashBegin(atlas **FontAtlas) {
+func NkFontStashBegin(atlas **FontAtlas) {
 	state.atlas = NewFontAtlas()
 	NkFontAtlasInitDefault(state.atlas)
 	NkFontAtlasBegin(state.atlas)
 	*atlas = state.atlas
 }
 
-func NkGLFW3FontStashEnd() {
+func NkFontStashEnd() {
 	var width, height int32
 	image := NkFontAtlasBake(state.atlas, &width, &height, FontAtlasRgba32)
 	deviceUploadAtlas(image, width, height)
@@ -71,7 +71,7 @@ func NkGLFW3FontStashEnd() {
 	}
 }
 
-func NkGLFW3NewFrame() {
+func NkPlatformNewFrame() {
 	win := state.win
 	ctx := state.ctx
 	state.width, state.height = win.GetSize()
@@ -142,21 +142,21 @@ func NkGLFW3NewFrame() {
 
 var (
 	sizeofDrawIndex = unsafe.Sizeof(DrawIndex(0))
-	emptyVertex     = glfwVertex{}
+	emptyVertex     = platformVertex{}
 )
 
-type glfwVertex struct {
+type platformVertex struct {
 	position [2]float32
 	uv       [2]float32
 	col      [4]Byte
 }
 
 const (
-	glfwVertexSize  = unsafe.Sizeof(glfwVertex{})
-	glfwVertexAlign = unsafe.Alignof(glfwVertex{})
+	platformVertexSize  = unsafe.Sizeof(platformVertex{})
+	platformVertexAlign = unsafe.Alignof(platformVertex{})
 )
 
-type glfwState struct {
+type platformState struct {
 	win *glfw.Window
 
 	width          int
@@ -164,7 +164,7 @@ type glfwState struct {
 	display_width  int
 	display_height int
 
-	ogl   *glfwDevice
+	ogl   *platformDevice
 	ctx   *Context
 	atlas *FontAtlas
 
@@ -173,6 +173,13 @@ type glfwState struct {
 
 	text   string
 	scroll float32
+}
+
+func NkPlatformDisplayHandle() *glfw.Window {
+	if state != nil {
+		return state.win
+	}
+	return nil
 }
 
 func keyPressed(win *glfw.Window, key glfw.Key) int32 {

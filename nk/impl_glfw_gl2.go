@@ -19,7 +19,7 @@ import (
 	"github.com/go-gl/gl/v2.1/gl"
 )
 
-func NkGLFW3Render(aa AntiAliasing, maxVertexBuffer, maxElementBuffer int) {
+func NkPlatformRender(aa AntiAliasing, maxVertexBuffer, maxElementBuffer int) {
 	dev := state.ogl
 
 	// setup global state
@@ -47,7 +47,7 @@ func NkGLFW3Render(aa AntiAliasing, maxVertexBuffer, maxElementBuffer int) {
 	{
 		// convert from command queue into draw list and draw to screen
 
-		vs := int32(glfwVertexSize)
+		vs := int32(platformVertexSize)
 		vp := unsafe.Offsetof(emptyVertex.position)
 		vt := unsafe.Offsetof(emptyVertex.uv)
 		vc := unsafe.Offsetof(emptyVertex.col)
@@ -69,8 +69,8 @@ func NkGLFW3Render(aa AntiAliasing, maxVertexBuffer, maxElementBuffer int) {
 					Offset:    Size(unsafe.Offsetof(emptyVertex.col)),
 				}, VertexLayoutEnd,
 			},
-			VertexSize:      Size(glfwVertexSize),
-			VertexAlignment: Size(glfwVertexAlign),
+			VertexSize:      Size(platformVertexSize),
+			VertexAlignment: Size(platformVertexAlign),
 			Null:            dev.null,
 
 			CircleSegmentCount: 22,
@@ -111,7 +111,7 @@ func NkGLFW3Render(aa AntiAliasing, maxVertexBuffer, maxElementBuffer int) {
 				int32(clipRect.H()*state.fbScaleY),
 			)
 			gl.DrawElements(gl.TRIANGLES, int32(elemCount), gl.UNSIGNED_SHORT, unsafe.Pointer(offset))
-			offset += uintptr(elemCount) * sizeofDrawIndex
+			offset += uintptr(elemCount)
 		})
 
 		NkClear(state.ctx)
@@ -159,11 +159,11 @@ func deviceDestroy() {
 	NkBufferFree(dev.cmds)
 }
 
-var state = &glfwState{
-	ogl: &glfwDevice{},
+var state = &platformState{
+	ogl: &platformDevice{},
 }
 
-type glfwDevice struct {
+type platformDevice struct {
 	cmds *Buffer
 	null DrawNullTexture
 

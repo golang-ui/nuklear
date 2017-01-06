@@ -45,12 +45,12 @@ func main() {
 	}
 	gl.Viewport(0, 0, int32(width), int32(height))
 
-	ctx := nk.NkGLFW3Init(win, nk.GLFW3InstallCallbacks)
+	ctx := nk.NkPlatformInit(win, nk.PlatformInstallCallbacks)
 
 	atlas := nk.NewFontAtlas()
-	nk.NkGLFW3FontStashBegin(&atlas)
+	nk.NkFontStashBegin(&atlas)
 	sansFont := nk.NkFontAtlasAddFromFile(atlas, s("assets/FreeSans.ttf"), 16, nil)
-	nk.NkGLFW3FontStashEnd()
+	nk.NkFontStashEnd()
 	if sansFont != nil {
 		nk.NkStyleSetFont(ctx, sansFont.Handle())
 	}
@@ -69,7 +69,7 @@ func main() {
 	for {
 		select {
 		case <-exitC:
-			nk.NkGLFW3Shutdown()
+			nk.NkPlatformShutdown()
 			glfw.Terminate()
 			fpsTicker.Stop()
 			close(doneC)
@@ -86,7 +86,7 @@ func main() {
 }
 
 func gfxMain(win *glfw.Window, ctx *nk.Context, state *State) {
-	nk.NkGLFW3NewFrame()
+	nk.NkPlatformNewFrame()
 
 	// Layout
 	bounds := nk.NkRect(50, 50, 230, 250)
@@ -135,7 +135,7 @@ func gfxMain(win *glfw.Window, ctx *nk.Context, state *State) {
 	gl.Viewport(0, 0, int32(width), int32(height))
 	gl.Clear(gl.COLOR_BUFFER_BIT)
 	gl.ClearColor(bg[0], bg[1], bg[2], bg[3])
-	nk.NkGLFW3Render(nk.AntiAliasingOn, maxVertexBuffer, maxElementBuffer)
+	nk.NkPlatformRender(nk.AntiAliasingOn, maxVertexBuffer, maxElementBuffer)
 	win.SwapBuffers()
 }
 

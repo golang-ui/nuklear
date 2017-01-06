@@ -47,9 +47,9 @@ Supported platforms are:
 * Linux
 * Android
 
-The desktop support is achieved using [GLFW 3.2](https://github.com/go-gl/glfw) and there are backends written in Go for OpenGL2.1 and OpenGL3.2. See [nk/impl_glfw_gl2.go](nk/impl_glfw_gl2.go) and [nk/impl_glfw_gl3.go](nk/impl_glfw_gl3.go).
+The desktop support is achieved using [GLFW](https://github.com/go-gl/glfw) and there are backends written in Go for OpenGL 2.1 and OpenGL 3.2. See [nk/impl_glfw_gl2.go](nk/impl_glfw_gl2.go) and [nk/impl_glfw_gl3.go](nk/impl_glfw_gl3.go).
 
-Android support is added using the [android-go](http://github.com/xlab/android-go) project, there is a corresponding backend for OpenGL ES 2.0 surface and input handling logic. GLES3 as well as sophisticated things like scroll gestures will be added later.
+Android support is added using the [android-go](http://github.com/xlab/android-go) project, there is a corresponding backend for OpenGL ES 3.0 surface and input handling logic. Sophisticated things like scroll gestures will be added later.
 
 #### Desktop installation
 
