@@ -89,7 +89,7 @@ func gfxMain(ctx *nk.Context, state *State) {
 	nk.NkPlatformNewFrame()
 
 	// Layout
-	bounds := nk.NkRect(50, 50, 230, 250)
+	bounds := nk.NkRect(200, 200, 600, 600)
 	update := nk.NkBegin(ctx, s("Demo"), bounds,
 		nk.WindowBorder|nk.WindowMovable|nk.WindowScalable|nk.WindowMinimizable|nk.WindowTitle)
 
@@ -134,6 +134,7 @@ func gfxMain(ctx *nk.Context, state *State) {
 
 	handle := nk.NkPlatformDisplayHandle()
 	width, height := handle.Width, handle.Height
+	state.width, state.height = width, height
 	gl.Viewport(0, 0, int32(width), int32(height))
 	gl.Clear(gl.COLOR_BUFFER_BIT)
 	gl.ClearColor(bg[0], bg[1], bg[2], bg[3])
@@ -148,6 +149,8 @@ const (
 )
 
 type State struct {
+	width   int
+	height  int
 	bgColor nk.Color
 	prop    int32
 	opt     Option

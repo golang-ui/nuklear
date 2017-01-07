@@ -35,6 +35,9 @@ func NkPlatformInit(win *android.NativeWindow, opt PlatformInitOption) *Context 
 		log.Println("Platform init failed:", err)
 		return nil
 	}
+	state = &platformState{
+		ogl: &platformDevice{},
+	}
 	state.display = display
 	state.ctx = NewContext()
 	NkInitDefault(state.ctx, nil)
@@ -151,7 +154,7 @@ func NkPlatformRender(aa AntiAliasing, maxVertexBuffer, maxElementBuffer int) {
 	ortho[0][0] /= float32(state.width)
 	ortho[1][1] /= float32(state.height)
 
-	// setup global state
+	// Setup render state: alpha-blending enabled, no face culling, no depth testing, scissor enabled
 	gl.Enable(gl.BLEND)
 	gl.BlendEquation(gl.FUNC_ADD)
 	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
@@ -178,8 +181,8 @@ func NkPlatformRender(aa AntiAliasing, maxVertexBuffer, maxElementBuffer int) {
 		gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, maxElementBuffer, nil, gl.STREAM_DRAW)
 
 		// load draw vertices & elements directly into vertex + element buffer
-		vertices := gl.MapBufferRange(gl.ARRAY_BUFFER, 0, maxVertexBuffer, gl.MAP_WRITE_BIT)
-		elements := gl.MapBufferRange(gl.ELEMENT_ARRAY_BUFFER, 0, maxElementBuffer, gl.MAP_WRITE_BIT)
+		vertices := gl.MapBufferRange(gl.ARRAY_BUFFER, 0, maxVertexBuffer, gl.MAP_WRITE_BIT|gl.MAP_INVALIDATE_BUFFER_BIT)
+		elements := gl.MapBufferRange(gl.ELEMENT_ARRAY_BUFFER, 0, maxElementBuffer, gl.MAP_WRITE_BIT|gl.MAP_INVALIDATE_BUFFER_BIT)
 		config := &ConvertConfig{
 			VertexLayout: []DrawVertexLayoutElement{
 				{
