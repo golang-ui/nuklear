@@ -47,9 +47,9 @@ Supported platforms are:
 * Linux
 * Android
 
-The desktop support is achieved using [GLFW](https://github.com/go-gl/glfw) and there are backends written in Go for OpenGL 2.1 and OpenGL 3.2. See [nk/impl_glfw_gl2.go](nk/impl_glfw_gl2.go) and [nk/impl_glfw_gl3.go](nk/impl_glfw_gl3.go).
+The desktop support is achieved using [GLFW](https://github.com/go-gl/glfw) and there are backends written in Go for OpenGL 2.1 and OpenGL 3.2.
 
-Android support is added using the [android-go](http://github.com/xlab/android-go) project, there is a corresponding backend for OpenGL ES 3.0 surface and input handling logic. Sophisticated things like scroll gestures will be added later.
+Android support is added using the [android-go](http://github.com/xlab/android-go) project, there is a corresponding backend for OpenGL ES 2.0 or 3.0 surface and input handling logic. Sophisticated things like scroll gestures will be added later.
 
 #### Desktop installation
 
@@ -82,7 +82,26 @@ gcc version 5.3.0 (GCC)
 $ go install github.com/golang-ui/nuklear/nk
 ```
 
-### Demo
+
+### Android demo
+
+In order run Android demo app [nk-android](https://github.com/golang-ui/nuklear/blob/master/cmd/nk-android/main.go) make sure that you've prepared your environent as described in plain [example](https://github.com/xlab/android-go/tree/master/example) Android app. Namely you need to install Android SDK, tools and run `make toolchain`:
+
+```bash
+$ cd $GOPATH/src/github.com/golang-ui/nuklear/cmd/nk-android
+$ make toolchain # need to run once
+
+# the regular routine:
+$ make
+$ make install
+$ make listen
+```
+
+<img src="https://cl.ly/2c0s3R3Q2g3V/Screenshot_20170108-045948.png" width="300"/>&nbsp;&nbsp;<img src="https://cl.ly/2X133z0Z3S1j/Screenshot_20170108-050051.png" width="300"/>
+
+[Click for video](https://www.youtube.com/watch?v=3-MiceegZlM)
+
+### Destop demo
 
 There is an example app [nk-example](https://github.com/golang-ui/nuklear/blob/master/cmd/nk-example/main.go) that shows the usage of Nuklear GUI library, based on the official demos.
 
@@ -96,7 +115,7 @@ $ nk-example
 2016/09/23 23:13:10 [INFO] button pressed!
 ```
 
-<img alt="demo screenshot nuklear" src="assets/demo.png" width="500"/>
+<img alt="demo screenshot nuklear" src="assets/demo.png" width="400"/>
 
 Another more realistic Go application that uses Nuklear to do its GUI, [a simple WebM player](https://github.com/xlab/libvpx-go):
 
