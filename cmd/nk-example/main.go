@@ -49,7 +49,8 @@ func main() {
 
 	atlas := nk.NewFontAtlas()
 	nk.NkFontStashBegin(&atlas)
-	sansFont := nk.NkFontAtlasAddFromFile(atlas, s("assets/FreeSans.ttf"), 16, nil)
+	sansFont := nk.NkFontAtlasAddFromBytes(atlas, MustAsset("assets/FreeSans.ttf"), 16, nil)
+	// sansFont := nk.NkFontAtlasAddDefault(atlas, 16, nil)
 	nk.NkFontStashEnd()
 	if sansFont != nil {
 		nk.NkStyleSetFont(ctx, sansFont.Handle())
@@ -95,22 +96,30 @@ func gfxMain(win *glfw.Window, ctx *nk.Context, state *State) {
 
 	if update > 0 {
 		nk.NkLayoutRowStatic(ctx, 30, 80, 1)
-		if nk.NkButtonLabel(ctx, s("button")) > 0 {
-			log.Println("[INFO] button pressed!")
+		{
+			if nk.NkButtonLabel(ctx, s("button")) > 0 {
+				log.Println("[INFO] button pressed!")
+			}
 		}
 		nk.NkLayoutRowDynamic(ctx, 30, 2)
-		if nk.NkOptionLabel(ctx, s("easy"), flag(state.opt == Easy)) > 0 {
-			state.opt = Easy
-		}
-		if nk.NkOptionLabel(ctx, s("hard"), flag(state.opt == Hard)) > 0 {
-			state.opt = Hard
+		{
+			if nk.NkOptionLabel(ctx, s("easy"), flag(state.opt == Easy)) > 0 {
+				state.opt = Easy
+			}
+			if nk.NkOptionLabel(ctx, s("hard"), flag(state.opt == Hard)) > 0 {
+				state.opt = Hard
+			}
 		}
 		nk.NkLayoutRowDynamic(ctx, 25, 1)
-		nk.NkPropertyInt(ctx, s("Compression:"), 0, &state.prop, 100, 10, 1)
 		{
-			nk.NkLayoutRowDynamic(ctx, 20, 1)
+			nk.NkPropertyInt(ctx, s("Compression:"), 0, &state.prop, 100, 10, 1)
+		}
+		nk.NkLayoutRowDynamic(ctx, 20, 1)
+		{
 			nk.NkLabel(ctx, s("background:"), nk.TextLeft)
-			nk.NkLayoutRowDynamic(ctx, 25, 1)
+		}
+		nk.NkLayoutRowDynamic(ctx, 25, 1)
+		{
 			size := nk.NkVec2(nk.NkWidgetWidth(ctx), 400)
 			if nk.NkComboBeginColor(ctx, state.bgColor, size) > 0 {
 				nk.NkLayoutRowDynamic(ctx, 120, 1)
@@ -129,7 +138,7 @@ func gfxMain(win *glfw.Window, ctx *nk.Context, state *State) {
 	nk.NkEnd(ctx)
 
 	// Render
-	bg := []float32{38, 38, 38, 255}
+	bg := make([]float32, 4)
 	nk.NkColorFv(bg, state.bgColor)
 	width, height := win.GetSize()
 	gl.Viewport(0, 0, int32(width), int32(height))
