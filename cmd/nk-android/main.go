@@ -111,7 +111,7 @@ func main() {
 					initPt()
 					atlas := nk.NewFontAtlas()
 					nk.NkFontStashBegin(&atlas)
-					sansFont := nk.NkFontAtlasAddFromBytes(atlas, MustAsset("assets/FreeSans.ttf"), 24*pt, nil)
+					sansFont := nk.NkFontAtlasAddFromBytes(atlas, MustAsset("assets/FreeSans.ttf"), 22*pt, nil)
 					// defaultFont := nk.NkFontAtlasAddDefault(atlas, 16*pt, nil)
 					nk.NkFontStashEnd()
 					if sansFont != nil {
