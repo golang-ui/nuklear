@@ -47,6 +47,7 @@ TRANSLATOR:
       - {target: "_color_hsva_iv$", tips: [arr,0]}
       - {target: "_color_hsva_bv$", tips: [arr,0]}
       - {target: "_color_hsva_fv$", tips: [arr,0]}
+      - {target: "_font_atlas_add_from_memory$", tips: [ref,ref,size,0,ref]}
       - {target: "_convert$", tips: [ref,ref,ref,ref,ref]}
       - {target: "nk_", tips: [sref,sref,sref,sref]} # defaults
   Rules: 
