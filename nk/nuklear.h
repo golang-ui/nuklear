@@ -554,6 +554,7 @@ enum nk_keys {
     NK_KEY_TEXT_END,
     NK_KEY_TEXT_UNDO,
     NK_KEY_TEXT_REDO,
+    NK_KEY_TEXT_SELECT_ALL,
     NK_KEY_TEXT_WORD_LEFT,
     NK_KEY_TEXT_WORD_RIGHT,
 
@@ -8999,7 +9000,7 @@ nk_tt__fill_active_edges_new(float *scanline, float *scanline_fill, int len,
     {
         /* brute force every pixel */
         /* compute intersection points with top & bottom */
-        // NK_ASSERT(e->ey >= y_top);
+        NK_ASSERT(e->ey >= y_top);
         if (e->fdx == 0) {
             float x0 = e->fx;
             if (x0 < len) {
@@ -9017,7 +9018,7 @@ nk_tt__fill_active_edges_new(float *scanline, float *scanline_fill, int len,
             float x_top, x_bottom;
             float y0,y1;
             float dy = e->fdy;
-            // NK_ASSERT(e->sy <= y_bottom && e->ey >= y_top);
+            NK_ASSERT(e->sy <= y_bottom && e->ey >= y_top);
 
             /* compute endpoints of line segment clipped to this scanline (if the */
             /* line segment starts on this scanline. x0 is the intersection of the */
@@ -9202,7 +9203,7 @@ nk_tt__rasterize_sorted_edges(struct nk_tt__bitmap *result, struct nk_tt__edge *
             if (e->y0 != e->y1) {
                 struct nk_tt__active_edge *z = nk_tt__new_active(&hh, e, off_x, scan_y_top);
                 if (z != 0) {
-                    // NK_ASSERT(z->ey >= scan_y_top);
+                    NK_ASSERT(z->ey >= scan_y_top);
                     /* insert at front */
                     z->next = active;
                     active = z;
@@ -11956,6 +11957,11 @@ retry:
 
     case NK_KEY_TEXT_REDO:
         nk_textedit_redo(state);
+        state->has_preferred_x = 0;
+        break;
+
+    case NK_KEY_TEXT_SELECT_ALL:
+        nk_textedit_select_all(state);
         state->has_preferred_x = 0;
         break;
 
@@ -18714,7 +18720,7 @@ nk_spacing(struct nk_context *ctx, int cols)
 {
     struct nk_window *win;
     struct nk_panel *layout;
-    struct nk_rect nil;
+    struct nk_rect none;
     int i, index, rows;
 
     NK_ASSERT(ctx);
@@ -18738,7 +18744,7 @@ nk_spacing(struct nk_context *ctx, int cols)
     if (layout->row.type != NK_LAYOUT_DYNAMIC_FIXED &&
         layout->row.type != NK_LAYOUT_STATIC_FIXED) {
         for (i = 0; i < cols; ++i)
-            nk_panel_alloc_space(&nil, ctx);
+            nk_panel_alloc_space(&none, ctx);
     }
     layout->row.index = index;
 }
