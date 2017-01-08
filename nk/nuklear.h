@@ -8999,7 +8999,7 @@ nk_tt__fill_active_edges_new(float *scanline, float *scanline_fill, int len,
     {
         /* brute force every pixel */
         /* compute intersection points with top & bottom */
-        NK_ASSERT(e->ey >= y_top);
+        // NK_ASSERT(e->ey >= y_top);
         if (e->fdx == 0) {
             float x0 = e->fx;
             if (x0 < len) {
@@ -9017,7 +9017,7 @@ nk_tt__fill_active_edges_new(float *scanline, float *scanline_fill, int len,
             float x_top, x_bottom;
             float y0,y1;
             float dy = e->fdy;
-            NK_ASSERT(e->sy <= y_bottom && e->ey >= y_top);
+            // NK_ASSERT(e->sy <= y_bottom && e->ey >= y_top);
 
             /* compute endpoints of line segment clipped to this scanline (if the */
             /* line segment starts on this scanline. x0 is the intersection of the */
@@ -9202,7 +9202,7 @@ nk_tt__rasterize_sorted_edges(struct nk_tt__bitmap *result, struct nk_tt__edge *
             if (e->y0 != e->y1) {
                 struct nk_tt__active_edge *z = nk_tt__new_active(&hh, e, off_x, scan_y_top);
                 if (z != 0) {
-                    NK_ASSERT(z->ey >= scan_y_top);
+                    // NK_ASSERT(z->ey >= scan_y_top);
                     /* insert at front */
                     z->next = active;
                     active = z;
