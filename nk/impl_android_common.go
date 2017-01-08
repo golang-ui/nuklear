@@ -82,10 +82,6 @@ func NkPlatformNewFrame() {
 			NkInputButton(ctx, ButtonLeft, x, y, 0)
 		}
 	})
-	if m := ctx.Input().Mouse(); m.Grabbed() {
-		prevX, prevY := m.Prev()
-		m.SetPos(prevX, prevY)
-	}
 	NkInputEnd(ctx)
 }
 
