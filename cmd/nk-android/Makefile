@@ -1,6 +1,7 @@
 ANDROID_TOOLCHAIN_DIR ?= $(shell pwd)/toolchain
 ANDROID_API ?= 21
 ANDROID_SYSROOT = $(NDK)/platforms/android-$(ANDROID_API)/arch-arm
+GLES_VERSION ?= gles3
 
 all: toolchain build apk
 
@@ -18,7 +19,7 @@ build:
 	GOARCH=arm \
 	GOARM=7 \
 	CGO_ENABLED=1 \
-	go build -buildmode=c-shared -o android/jni/lib/libnkactivity.so
+	go build -tags $(GLES_VERSION) -buildmode=c-shared -o android/jni/lib/libnkactivity.so
  
 apk:
 	cd android && make
@@ -33,3 +34,5 @@ listen:
 	adb logcat -c
 	adb logcat *:S NuklearActivity
 	
+bindata:
+	go-bindata -pkg main assets/
