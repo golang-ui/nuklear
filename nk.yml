@@ -77,9 +77,12 @@ TRANSLATOR:
       - {action: replace, from: "_rgb$", to: _color_format_RGB}
       - {action: replace, from: "_rgba$", to: _color_format_RGBA}
     function:
-      - {action: ignore, from: "(?i)nk_str"}
-      - {action: ignore, from: "_input_glyph"}
-      - {action: ignore, from: "_draw_list_clear"}
+      # - {action: ignore, from: "(?i)nk_str"}
+      - {action: ignore, from: "_plot_function$"}
+      - {action: ignore, from: "_combo_callback$"}
+      - {action: ignore, from: "_combobox_callback$"}
+      - {action: ignore, from: "_input_glyph$"}
+      - {action: ignore, from: "_draw_list_clear$"}
     type:   
       - {action: replace, from: "^Nk_", to: _}
       - {action: replace, from: "_t$"}
