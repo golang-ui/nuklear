@@ -141,11 +141,15 @@ func gfxMain(ctx *nk.Context, state *State) {
 
 	if update > 0 {
 		filler(ctx, 10*pt)
-		nk.NkLayoutRowStatic(ctx, 40*pt, int32(140*pt), 2)
+		nk.NkLayoutRowStatic(ctx, 40*pt, int32(140*pt), 3)
 		{
 			if nk.NkButtonLabel(ctx, s("button")) > 0 {
 				log.Println("[INFO] button pressed!")
 				state.times++
+			}
+			nk.NkSpacing(ctx, 1)
+			if nk.NkButtonLabel(ctx, s("toggle keyboard")) > 0 {
+				toggleKeyboard(state)
 			}
 		}
 		nk.NkLayoutRowDynamic(ctx, 20*pt, 1)
@@ -205,6 +209,29 @@ func gfxMain(ctx *nk.Context, state *State) {
 	nk.NkPlatformRender(nk.AntiAliasingOn, maxVertexBuffer, maxElementBuffer)
 }
 
+func toggleKeyboard(state *State) {
+	if activity == nil {
+		return
+	}
+	if state.kbShown {
+		log.Println("[INFO] trying to hide keyboard")
+		err := activity.SetSoftKeyboardState(android.SoftKeyboardHidden)
+		if err != nil {
+			log.Println("[WARN] hide keyboard error:", err)
+			return
+		}
+		state.kbShown = false
+		return
+	}
+	log.Println("[INFO] trying to show keyboard")
+	err := activity.SetSoftKeyboardState(android.SoftKeyboardVisible)
+	if err != nil {
+		log.Println("[WARN] show keyboard error:", err)
+		return
+	}
+	state.kbShown = true
+}
+
 type Option uint8
 
 const (
@@ -215,6 +242,7 @@ const (
 type State struct {
 	width   int
 	height  int
+	kbShown bool
 	bgColor nk.Color
 	prop    int32
 	opt     Option
