@@ -28,6 +28,9 @@ TRANSLATOR:
     - {target: "_user", self: bind}
     - {target: "_draw_vertex_layout_element", self: bind}
     - {target: "_convert_config", self: bind}
+    - {target: "nk_plugin_", self: bind}
+    - {target: "nk_text_width_f", self: bind}
+    - {target: "nk_query_font_glyph_f", self: bind}
     - {target: "nk_", self: raw}
   TypeTips:
     function:
@@ -47,6 +50,8 @@ TRANSLATOR:
       - {target: "_color_hsva_iv$", tips: [arr,0]}
       - {target: "_color_hsva_bv$", tips: [arr,0]}
       - {target: "_color_hsva_fv$", tips: [arr,0]}
+      - {target: "_edit_string$", tips: [ref,0,arr,ref,0,0]}
+      - {target: "_edit_string_zero_terminated$", tips: [ref,0,arr,0,0]}
       - {target: "_font_atlas_add_from_memory$", tips: [ref,ref,size,0,ref]}
       - {target: "_convert$", tips: [ref,ref,ref,ref,ref]}
       - {target: "nk_", tips: [sref,sref,sref,sref]} # defaults
