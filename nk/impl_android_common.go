@@ -37,6 +37,10 @@ func NkFontStashEnd() {
 }
 
 type PlatformKeyEvent struct {
+	Activity  *android.NativeActivity
+	Action    int32
+	KeyCode   int32
+	MetaState int32
 }
 
 type PlatformTouchEvent struct {
@@ -49,7 +53,18 @@ func NkPlatformInput(touch *PlatformTouchEvent, key *PlatformKeyEvent) {
 		state.touch.Add(*touch)
 	}
 	if key != nil {
-		// TODO
+		state.keys.Add(*key)
+		if key.Action == android.KeyEventActionUp && key.Activity != nil {
+			switch key.KeyCode {
+			case android.KeycodeUnknown:
+			case android.KeycodeEnter, android.KeycodeTab:
+			default:
+				r, err := key.Activity.KeyEventGetUnicodeChar(key.Action, key.KeyCode, key.MetaState)
+				if err == nil && r > 0 {
+					state.text += string(r)
+				}
+			}
+		}
 	}
 }
 
@@ -64,9 +79,12 @@ func NkPlatformNewFrame() {
 	state.fbScaleY = float32(state.display_height) / float32(state.height)
 
 	NkInputBegin(ctx)
+
 	for _, r := range state.text {
 		NkInputUnicode(ctx, Rune(r))
 	}
+	state.text = ""
+
 	if state.touch.CurrentAction() == android.MotionEventActionUp {
 		ctx.Input().Mouse().SetPos(0, 0)
 	}
@@ -82,7 +100,71 @@ func NkPlatformNewFrame() {
 			NkInputButton(ctx, ButtonLeft, x, y, 0)
 		}
 	})
+
+	toDeliver := map[int32][]int32{
+		android.KeycodeForwardDel: {},
+		android.KeycodeEnter:      {},
+		android.KeycodeTab:        {},
+		android.KeycodeDel:        {},
+		android.KeycodeDpadUp:     {},
+		android.KeycodeDpadDown:   {},
+		android.KeycodeDpadLeft:   {},
+		android.KeycodeDpadRight:  {},
+		android.KeycodeShiftLeft:  {},
+		android.KeycodeShiftRight: {},
+		android.KeycodeCtrlLeft:   {},
+		android.KeycodeCtrlRight:  {},
+	}
+	state.keys.Observe(func(action, key, metaState int32) {
+		toDeliver[key] = append(toDeliver[key], action)
+	})
+	for key, actions := range toDeliver {
+		deliverKey := func(key, isDown int32) {
+			switch key {
+			case android.KeycodeForwardDel:
+				NkInputKey(ctx, KeyDel, isDown)
+			case android.KeycodeEnter:
+				NkInputKey(ctx, KeyEnter, isDown)
+			case android.KeycodeTab:
+				NkInputKey(ctx, KeyTab, isDown)
+			case android.KeycodeDel:
+				NkInputKey(ctx, KeyBackspace, isDown)
+			case android.KeycodeDpadUp:
+				NkInputKey(ctx, KeyUp, isDown)
+			case android.KeycodeDpadDown:
+				NkInputKey(ctx, KeyDown, isDown)
+			case android.KeycodeDpadLeft:
+				NkInputKey(ctx, KeyLeft, isDown)
+			case android.KeycodeDpadRight:
+				NkInputKey(ctx, KeyRight, isDown)
+			case android.KeycodeShiftLeft, android.KeycodeShiftRight:
+				NkInputKey(ctx, KeyShift, isDown)
+			case android.KeycodeCtrlLeft, android.KeycodeCtrlRight:
+				NkInputKey(ctx, KeyCtrl, isDown)
+			}
+		}
+		switch {
+		case len(actions) == 0:
+			deliverKey(key, 0)
+		case len(actions) == 0:
+			deliverKey(key, isDown(actions[0]))
+		case len(actions) >= 2:
+			if actions[0] == actions[1] {
+				deliverKey(key, isDown(actions[0]))
+			} else {
+				deliverKey(key, isDown(actions[0]))
+				deliverKey(key, isDown(actions[1]))
+			}
+		}
+	}
 	NkInputEnd(ctx)
+}
+
+func isDown(action int32) int32 {
+	if action == android.KeyEventActionDown {
+		return 1
+	}
+	return 0
 }
 
 var (
@@ -104,6 +186,7 @@ const (
 type platformState struct {
 	display *egl.DisplayHandle
 	touch   *touchHandler
+	keys    *keyHandler
 
 	width          int
 	height         int
@@ -125,6 +208,7 @@ func newPlatformState() *platformState {
 	return &platformState{
 		ogl:   &platformDevice{},
 		touch: newTouchHandler(),
+		keys:  newKeyHandler(),
 	}
 }
 
@@ -224,4 +308,66 @@ func (t *touchHandler) CurrentAction() (a int32) {
 	}
 	t.mux.RUnlock()
 	return a
+}
+
+const keyDecayTime = 500 * time.Millisecond
+
+type keyHandler struct {
+	current *PlatformKeyEvent
+	queue   []PlatformKeyEvent
+	mux     *sync.RWMutex
+	decay   *time.Timer
+}
+
+func newKeyHandler() *keyHandler {
+	h := &keyHandler{
+		queue: make([]PlatformKeyEvent, 0, 1024),
+		mux:   new(sync.RWMutex),
+	}
+	h.decay = time.NewTimer(time.Minute)
+	h.decay.Stop()
+	go func() {
+		for range h.decay.C {
+			h.decay.Reset(keyDecayTime)
+		}
+	}()
+	return h
+}
+
+func (h *keyHandler) Add(ev PlatformKeyEvent) {
+	h.mux.Lock()
+	h.queue = append(h.queue, ev)
+	h.current = &ev
+	h.decay.Reset(keyDecayTime)
+	h.mux.Unlock()
+}
+
+func (h *keyHandler) Reset() {
+	h.mux.Lock()
+	if ql := len(h.queue); ql > 0 {
+		h.queue = h.queue[:0]
+	}
+	h.mux.Unlock()
+}
+
+func (h *keyHandler) Observe(fn func(action, key, metaState int32)) {
+	h.mux.Lock()
+	if len(h.queue) > 0 {
+		for i := range h.queue {
+			ev := &h.queue[i]
+			fn(ev.Action, ev.KeyCode, ev.MetaState)
+		}
+		h.queue = h.queue[:0]
+	}
+	h.mux.Unlock()
+}
+
+func (h *keyHandler) Current() (a, k int32) {
+	h.mux.RLock()
+	if h.current != nil {
+		a = h.current.Action
+		k = h.current.KeyCode
+	}
+	h.mux.RUnlock()
+	return a, k
 }

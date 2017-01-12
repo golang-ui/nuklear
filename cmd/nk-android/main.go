@@ -36,8 +36,6 @@ func initPt() {
 	}
 }
 
-var activity *android.NativeActivity
-
 func main() {
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
@@ -47,8 +45,10 @@ func main() {
 
 	var ctx *nk.Context
 	appState := &State{
+		buffer:  make([]byte, 256*1024), // for text box
 		bgColor: nk.NkRgba(0, 145, 118, 255),
 	}
+	copy(appState.buffer, []byte("Write text here...\x00"))
 	fpsTicker := time.NewTimer(time.Minute)
 	fpsTicker.Stop()
 
@@ -61,22 +61,35 @@ func main() {
 			app.HandleInputQueues(inputQueueChan, func() {
 				a.InputQueueHandled()
 			}, func(ev *android.InputEvent) {
-				flagged := android.MotionEventGetFlags(ev) > 0
-				if flagged {
-					return
-				}
-				action := android.MotionEventGetAction(ev)
-				switch action {
-				case android.MotionEventActionDown,
-					android.MotionEventActionMove,
-					android.MotionEventActionUp:
-					x := android.MotionEventGetX(ev, 0)
-					y := android.MotionEventGetY(ev, 0)
-					nk.NkPlatformInput(&nk.PlatformTouchEvent{
-						Action: action,
-						X:      int32(x),
-						Y:      int32(y),
-					}, nil)
+				switch android.InputEventGetType(ev) {
+				case android.InputEventTypeKey:
+					key := android.KeyEventGetKeyCode(ev)
+					action := android.KeyEventGetAction(ev)
+					meta := android.KeyEventGetMetaState(ev)
+					switch action {
+					case android.KeyEventActionDown,
+						android.KeyEventActionUp:
+						nk.NkPlatformInput(nil, &nk.PlatformKeyEvent{
+							Activity:  a.NativeActivity(),
+							Action:    action,
+							KeyCode:   key,
+							MetaState: meta,
+						})
+					}
+				case android.InputEventTypeMotion:
+					action := android.MotionEventGetAction(ev)
+					switch action {
+					case android.MotionEventActionDown,
+						android.MotionEventActionMove,
+						android.MotionEventActionUp:
+						x := android.MotionEventGetX(ev, 0)
+						y := android.MotionEventGetY(ev, 0)
+						nk.NkPlatformInput(&nk.PlatformTouchEvent{
+							Action: action,
+							X:      int32(x),
+							Y:      int32(y),
+						}, nil)
+					}
 				}
 			})
 		}()
@@ -93,17 +106,16 @@ func main() {
 					inputQueueChan <- nil
 				}
 			case <-fpsTicker.C:
-				gfxMain(ctx, appState)
+				gfxMain(a.NativeActivity(), ctx, appState)
 				fpsTicker.Reset(fpsTime)
 			case event := <-nativeWindowEvents:
 				switch event.Kind {
 				case app.NativeWindowRedrawNeeded:
 					initPt()
-					gfxMain(ctx, appState)
+					gfxMain(a.NativeActivity(), ctx, appState)
 					a.NativeWindowRedrawDone()
 					fpsTicker.Reset(fpsTime)
 				case app.NativeWindowCreated:
-					activity = event.Activity
 					ctx = nk.NkPlatformInit(event.Window, nk.PlatformInstallCallbacks)
 					if ctx == nil {
 						log.Fatalln("Nuklear failed to init")
@@ -131,7 +143,7 @@ func filler(ctx *nk.Context, height float32) {
 }
 
 // gfxMain is the main GUI code that is borrowed directly from the desktop example.
-func gfxMain(ctx *nk.Context, state *State) {
+func gfxMain(activity *android.NativeActivity, ctx *nk.Context, state *State) {
 	nk.NkPlatformNewFrame()
 
 	// Layout
@@ -149,12 +161,23 @@ func gfxMain(ctx *nk.Context, state *State) {
 			}
 			nk.NkSpacing(ctx, 1)
 			if nk.NkButtonLabel(ctx, s("toggle keyboard")) > 0 {
-				toggleKeyboard(state)
+				toggleKeyboard(activity, state)
 			}
 		}
 		nk.NkLayoutRowDynamic(ctx, 20*pt, 1)
 		{
 			nk.NkLabel(ctx, s(fmt.Sprintf("button pressed %d times", state.times)), nk.TextAlignLeft)
+		}
+		filler(ctx, 10*pt)
+		nk.NkLayoutRowDynamic(ctx, 100*pt, 1)
+		{
+			flags := nk.NkEditStringZeroTerminated(ctx,
+				nk.EditBox, state.buffer, int32(len(state.buffer)), nk.NkFilterDefault)
+			if flags&nk.EditActivated == nk.EditActivated && !state.kbShown {
+				toggleKeyboard(activity, state)
+			} else if flags&nk.EditDeactivated == nk.EditDeactivated && state.kbShown {
+				toggleKeyboard(activity, state)
+			}
 		}
 		filler(ctx, 10*pt)
 		nk.NkLayoutRowDynamic(ctx, 30*pt, 2)
@@ -209,24 +232,28 @@ func gfxMain(ctx *nk.Context, state *State) {
 	nk.NkPlatformRender(nk.AntiAliasingOn, maxVertexBuffer, maxElementBuffer)
 }
 
-func toggleKeyboard(state *State) {
+func toggleKeyboard(activity *android.NativeActivity, state *State) {
 	if activity == nil {
 		return
 	}
 	if state.kbShown {
-		log.Println("[INFO] trying to hide keyboard")
 		err := activity.SetSoftKeyboardState(android.SoftKeyboardHidden)
 		if err != nil {
 			log.Println("[WARN] hide keyboard error:", err)
-			return
+			if err := activity.SetSoftKeyboardState(android.SoftKeyboardVisible); err != nil {
+				log.Println("[WARN] show keyboard error:", err)
+			} else {
+				state.kbShown = true
+				return
+			}
 		}
 		state.kbShown = false
 		return
 	}
-	log.Println("[INFO] trying to show keyboard")
 	err := activity.SetSoftKeyboardState(android.SoftKeyboardVisible)
 	if err != nil {
 		log.Println("[WARN] show keyboard error:", err)
+		state.kbShown = false
 		return
 	}
 	state.kbShown = true
@@ -240,6 +267,7 @@ const (
 )
 
 type State struct {
+	buffer  []byte
 	width   int
 	height  int
 	kbShown bool
