@@ -217,3 +217,15 @@ func (b *Buffer) Size() int {
 func (b *Buffer) Type() AllocationType {
 	return (AllocationType)(b._type)
 }
+
+func (l *ListView) Begin() int {
+	return (int)(l.begin)
+}
+
+func (l *ListView) End() int {
+	return (int)(l.end)
+}
+
+func (l *ListView) Count() int {
+	return (int)(l.count)
+}
