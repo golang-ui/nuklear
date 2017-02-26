@@ -1,5 +1,5 @@
 all:
-	cgogen nk.yml
+	c-for-go nk.yml
 
 clean:
 	rm -f nk/cgo_helpers.go nk/cgo_helpers.h nk/cgo_helpers.c

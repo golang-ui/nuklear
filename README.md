@@ -123,7 +123,7 @@ Another more realistic Go application that uses Nuklear to do its GUI, [a simple
 
 ### Rebuilding the package
 
-You will need to get the [cgogen](https://git.io/cgogen) tool installed first.
+You will need to get the [c-for-go](https://git.io/c-for-go) tool installed first.
 
 ```
 $ git clone https://github.com/golang-ui/nuklear && cd nuklear
