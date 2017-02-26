@@ -148,25 +148,25 @@ func gfxMain(activity *android.NativeActivity, ctx *nk.Context, state *State) {
 
 	// Layout
 	bounds := nk.NkRect(50*pt, 300*pt, 500*pt, 500*pt)
-	update := nk.NkBegin(ctx, s("Demo"), bounds,
+	update := nk.NkBegin(ctx, "Demo", bounds,
 		nk.WindowBorder|nk.WindowMovable|nk.WindowScalable|nk.WindowMinimizable|nk.WindowTitle)
 
 	if update > 0 {
 		filler(ctx, 10*pt)
 		nk.NkLayoutRowStatic(ctx, 40*pt, int32(140*pt), 3)
 		{
-			if nk.NkButtonLabel(ctx, s("button")) > 0 {
+			if nk.NkButtonLabel(ctx, "button") > 0 {
 				log.Println("[INFO] button pressed!")
 				state.times++
 			}
 			nk.NkSpacing(ctx, 1)
-			if nk.NkButtonLabel(ctx, s("toggle keyboard")) > 0 {
+			if nk.NkButtonLabel(ctx, "toggle keyboard") > 0 {
 				toggleKeyboard(activity, state)
 			}
 		}
 		nk.NkLayoutRowDynamic(ctx, 20*pt, 1)
 		{
-			nk.NkLabel(ctx, s(fmt.Sprintf("button pressed %d times", state.times)), nk.TextAlignLeft)
+			nk.NkLabel(ctx, fmt.Sprintf("button pressed %d times", state.times), nk.TextAlignLeft)
 		}
 		filler(ctx, 10*pt)
 		nk.NkLayoutRowDynamic(ctx, 100*pt, 1)
@@ -182,22 +182,22 @@ func gfxMain(activity *android.NativeActivity, ctx *nk.Context, state *State) {
 		filler(ctx, 10*pt)
 		nk.NkLayoutRowDynamic(ctx, 30*pt, 2)
 		{
-			if nk.NkOptionLabel(ctx, s("easy"), flag(state.opt == Easy)) > 0 {
+			if nk.NkOptionLabel(ctx, "easy", flag(state.opt == Easy)) > 0 {
 				state.opt = Easy
 			}
-			if nk.NkOptionLabel(ctx, s("hard"), flag(state.opt == Hard)) > 0 {
+			if nk.NkOptionLabel(ctx, "hard", flag(state.opt == Hard)) > 0 {
 				state.opt = Hard
 			}
 		}
 		filler(ctx, 10*pt)
 		nk.NkLayoutRowDynamic(ctx, 25*pt, 1)
 		{
-			nk.NkPropertyInt(ctx, s("Compression:"), 0, &state.prop, 100, 10, 1)
+			nk.NkPropertyInt(ctx, "Compression:", 0, &state.prop, 100, 10, 1)
 		}
 		filler(ctx, 10*pt)
 		nk.NkLayoutRowDynamic(ctx, 20*pt, 1)
 		{
-			nk.NkLabel(ctx, s("background:"), nk.TextLeft)
+			nk.NkLabel(ctx, "background:", nk.TextLeft)
 		}
 		filler(ctx, 10*pt)
 		nk.NkLayoutRowDynamic(ctx, 25*pt, 1)
@@ -208,10 +208,10 @@ func gfxMain(activity *android.NativeActivity, ctx *nk.Context, state *State) {
 				state.bgColor = nk.NkColorPicker(ctx, state.bgColor, nk.ColorFormatRGBA)
 				nk.NkLayoutRowDynamic(ctx, 25*pt, 1)
 				r, g, b, a := state.bgColor.RGBAi()
-				r = nk.NkPropertyi(ctx, s("#R:"), 0, r, 255, 1, 1)
-				g = nk.NkPropertyi(ctx, s("#G:"), 0, g, 255, 1, 1)
-				b = nk.NkPropertyi(ctx, s("#B:"), 0, b, 255, 1, 1)
-				a = nk.NkPropertyi(ctx, s("#A:"), 0, a, 255, 1, 1)
+				r = nk.NkPropertyi(ctx, "#R:", 0, r, 255, 1, 1)
+				g = nk.NkPropertyi(ctx, "#G:", 0, g, 255, 1, 1)
+				b = nk.NkPropertyi(ctx, "#B:", 0, b, 255, 1, 1)
+				a = nk.NkPropertyi(ctx, "#A:", 0, a, 255, 1, 1)
 				state.bgColor.SetRGBAi(r, g, b, a)
 				nk.NkComboEnd(ctx)
 			}
