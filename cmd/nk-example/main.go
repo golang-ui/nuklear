@@ -91,32 +91,32 @@ func gfxMain(win *glfw.Window, ctx *nk.Context, state *State) {
 
 	// Layout
 	bounds := nk.NkRect(50, 50, 230, 250)
-	update := nk.NkBegin(ctx, s("Demo"), bounds,
+	update := nk.NkBegin(ctx, "Demo", bounds,
 		nk.WindowBorder|nk.WindowMovable|nk.WindowScalable|nk.WindowMinimizable|nk.WindowTitle)
 
 	if update > 0 {
 		nk.NkLayoutRowStatic(ctx, 30, 80, 1)
 		{
-			if nk.NkButtonLabel(ctx, s("button")) > 0 {
+			if nk.NkButtonLabel(ctx, "button") > 0 {
 				log.Println("[INFO] button pressed!")
 			}
 		}
 		nk.NkLayoutRowDynamic(ctx, 30, 2)
 		{
-			if nk.NkOptionLabel(ctx, s("easy"), flag(state.opt == Easy)) > 0 {
+			if nk.NkOptionLabel(ctx, "easy", flag(state.opt == Easy)) > 0 {
 				state.opt = Easy
 			}
-			if nk.NkOptionLabel(ctx, s("hard"), flag(state.opt == Hard)) > 0 {
+			if nk.NkOptionLabel(ctx, "hard", flag(state.opt == Hard)) > 0 {
 				state.opt = Hard
 			}
 		}
 		nk.NkLayoutRowDynamic(ctx, 25, 1)
 		{
-			nk.NkPropertyInt(ctx, s("Compression:"), 0, &state.prop, 100, 10, 1)
+			nk.NkPropertyInt(ctx, "Compression:", 0, &state.prop, 100, 10, 1)
 		}
 		nk.NkLayoutRowDynamic(ctx, 20, 1)
 		{
-			nk.NkLabel(ctx, s("background:"), nk.TextLeft)
+			nk.NkLabel(ctx, "background:", nk.TextLeft)
 		}
 		nk.NkLayoutRowDynamic(ctx, 25, 1)
 		{
@@ -126,10 +126,10 @@ func gfxMain(win *glfw.Window, ctx *nk.Context, state *State) {
 				state.bgColor = nk.NkColorPicker(ctx, state.bgColor, nk.ColorFormatRGBA)
 				nk.NkLayoutRowDynamic(ctx, 25, 1)
 				r, g, b, a := state.bgColor.RGBAi()
-				r = nk.NkPropertyi(ctx, s("#R:"), 0, r, 255, 1, 1)
-				g = nk.NkPropertyi(ctx, s("#G:"), 0, g, 255, 1, 1)
-				b = nk.NkPropertyi(ctx, s("#B:"), 0, b, 255, 1, 1)
-				a = nk.NkPropertyi(ctx, s("#A:"), 0, a, 255, 1, 1)
+				r = nk.NkPropertyi(ctx, "#R:", 0, r, 255, 1, 1)
+				g = nk.NkPropertyi(ctx, "#G:", 0, g, 255, 1, 1)
+				b = nk.NkPropertyi(ctx, "#B:", 0, b, 255, 1, 1)
+				a = nk.NkPropertyi(ctx, "#A:", 0, a, 255, 1, 1)
 				state.bgColor.SetRGBAi(r, g, b, a)
 				nk.NkComboEnd(ctx)
 			}
