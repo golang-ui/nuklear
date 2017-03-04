@@ -229,3 +229,7 @@ func (l *ListView) End() int {
 func (l *ListView) Count() int {
 	return (int)(l.count)
 }
+
+func (panel *Panel) Bounds() *Rect {
+	return (*Rect)(&panel.bounds)
+}
