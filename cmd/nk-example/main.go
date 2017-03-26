@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/go-gl/gl/v3.2-core/gl"
-	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/golang-ui/nuklear/nk"
+	"github.com/veandco/go-sdl2/sdl"
 	"github.com/xlab/closer"
 )
 
@@ -24,33 +24,33 @@ func init() {
 }
 
 func main() {
-	if err := glfw.Init(); err != nil {
-		closer.Fatalln(err)
-	}
-	glfw.WindowHint(glfw.ContextVersionMajor, 3)
-	glfw.WindowHint(glfw.ContextVersionMinor, 2)
-	glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
-	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
-	win, err := glfw.CreateWindow(winWidth, winHeight, "Nuklear Demo", nil, nil)
+	var err error
+	sdl.Init(sdl.INIT_EVERYTHING)
+
+	win, err := sdl.CreateWindow("Nuklear Demo", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED, winWidth, winHeight, sdl.WINDOW_OPENGL)
 	if err != nil {
 		closer.Fatalln(err)
 	}
-	win.MakeContextCurrent()
+	defer win.Destroy()
+
+	context, err := sdl.GL_CreateContext(win)
+	if err != nil {
+		closer.Fatalln(err)
+	}
 
 	width, height := win.GetSize()
-	log.Printf("glfw: created window %dx%d", width, height)
+	log.Printf("SDL2: created window %dx%d", width, height)
 
 	if err := gl.Init(); err != nil {
 		closer.Fatalln("opengl: init failed:", err)
 	}
 	gl.Viewport(0, 0, int32(width), int32(height))
 
-	ctx := nk.NkPlatformInit(win, nk.PlatformInstallCallbacks)
+	ctx := nk.NkPlatformInit(win, context, nk.PlatformInstallCallbacks)
 
 	atlas := nk.NewFontAtlas()
 	nk.NkFontStashBegin(&atlas)
 	sansFont := nk.NkFontAtlasAddFromBytes(atlas, MustAsset("assets/FreeSans.ttf"), 16, nil)
-	// sansFont := nk.NkFontAtlasAddDefault(atlas, 16, nil)
 	nk.NkFontStashEnd()
 	if sansFont != nil {
 		nk.NkStyleSetFont(ctx, sansFont.Handle())
@@ -71,22 +71,22 @@ func main() {
 		select {
 		case <-exitC:
 			nk.NkPlatformShutdown()
-			glfw.Terminate()
+			sdl.Quit()
 			fpsTicker.Stop()
 			close(doneC)
 			return
 		case <-fpsTicker.C:
-			if win.ShouldClose() {
-				close(exitC)
-				continue
-			}
-			glfw.PollEvents()
+			// if win.ShouldClose() {
+			// 	close(exitC)
+			// 	continue
+			// }
+			// glfw.PollEvents()
 			gfxMain(win, ctx, state)
 		}
 	}
 }
 
-func gfxMain(win *glfw.Window, ctx *nk.Context, state *State) {
+func gfxMain(win *sdl.Window, ctx *nk.Context, state *State) {
 	nk.NkPlatformNewFrame()
 
 	// Layout
@@ -145,7 +145,7 @@ func gfxMain(win *glfw.Window, ctx *nk.Context, state *State) {
 	gl.Clear(gl.COLOR_BUFFER_BIT)
 	gl.ClearColor(bg[0], bg[1], bg[2], bg[3])
 	nk.NkPlatformRender(nk.AntiAliasingOn, maxVertexBuffer, maxElementBuffer)
-	win.SwapBuffers()
+	sdl.GL_SwapWindow(win)
 }
 
 type Option uint8
@@ -162,5 +162,5 @@ type State struct {
 }
 
 func onError(code int32, msg string) {
-	log.Printf("[glfw ERR]: error %d: %s", code, msg)
+	log.Printf("[ERR]: error %d: %s", code, msg)
 }
