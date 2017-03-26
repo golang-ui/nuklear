@@ -40,11 +40,6 @@ func NkPlatformInit(win *sdl.Window, context sdl.GLContext, opt PlatformInitOpti
 	NkInitDefault(state.ctx, nil)
 	deviceCreate()
 	return state.ctx
-
-	// TODO(xlab): clipboard
-	// state.ctx.clip.copy = nk_glfw3_clipbard_copy;
-	// state.ctx.clip.paste = nk_glfw3_clipbard_paste;
-	// state.ctx.clip.userdata = nk_handle_ptr(0);
 }
 
 func NkPlatformShutdown() {
@@ -92,48 +87,63 @@ func NkPlatformNewFrame() {
 		sdl.SetRelativeMouseMode(false)
 	}
 
-	// NkInputKey(ctx, KeyDel, keyPressed(win, glfw.KeyDelete))
-	// NkInputKey(ctx, KeyEnter, keyPressed(win, glfw.KeyEnter))
-	// NkInputKey(ctx, KeyTab, keyPressed(win, glfw.KeyTab))
-	// NkInputKey(ctx, KeyBackspace, keyPressed(win, glfw.KeyBackspace))
-	// NkInputKey(ctx, KeyUp, keyPressed(win, glfw.KeyUp))
-	// NkInputKey(ctx, KeyDown, keyPressed(win, glfw.KeyDown))
-	// NkInputKey(ctx, KeyTextStart, keyPressed(win, glfw.KeyHome))
-	// NkInputKey(ctx, KeyTextEnd, keyPressed(win, glfw.KeyEnd))
-	// NkInputKey(ctx, KeyScrollStart, keyPressed(win, glfw.KeyHome))
-	// NkInputKey(ctx, KeyScrollEnd, keyPressed(win, glfw.KeyEnd))
-	// NkInputKey(ctx, KeyScrollUp, keyPressed(win, glfw.KeyPageUp))
-	// NkInputKey(ctx, KeyScrollDown, keyPressed(win, glfw.KeyPageDown))
-	// NkInputKey(ctx, KeyShift, keysPressed(win, glfw.KeyLeftShift, glfw.KeyRightShift))
-	// if keysPressed(win, glfw.KeyLeftControl, glfw.KeyRightControl) > 0 {
-	// 	NkInputKey(ctx, KeyCopy, keyPressed(win, glfw.KeyC))
-	// 	NkInputKey(ctx, KeyPaste, keyPressed(win, glfw.KeyV))
-	// 	NkInputKey(ctx, KeyCut, keyPressed(win, glfw.KeyX))
-	// 	NkInputKey(ctx, KeyTextUndo, keyPressed(win, glfw.KeyZ))
-	// 	NkInputKey(ctx, KeyTextRedo, keyPressed(win, glfw.KeyR))
-	// 	NkInputKey(ctx, KeyTextWordLeft, keyPressed(win, glfw.KeyLeft))
-	// 	NkInputKey(ctx, KeyTextWordRight, keyPressed(win, glfw.KeyRight))
-	// 	NkInputKey(ctx, KeyTextLineStart, keyPressed(win, glfw.KeyB))
-	// 	NkInputKey(ctx, KeyTextLineEnd, keyPressed(win, glfw.KeyE))
-	// } else {
-	// 	NkInputKey(ctx, KeyLeft, keyPressed(win, glfw.KeyLeft))
-	// 	NkInputKey(ctx, KeyRight, keyPressed(win, glfw.KeyRight))
-	// 	NkInputKey(ctx, KeyCopy, 0)
-	// 	NkInputKey(ctx, KeyPaste, 0)
-	// 	NkInputKey(ctx, KeyCut, 0)
-	// 	NkInputKey(ctx, KeyShift, 0)
-	// }
-	// x, y := win.GetCursorPos()
-	// NkInputMotion(ctx, int32(x), int32(y))
+	keys := sdl.GetKeyboardState()
+
+	NkInputKey(ctx, KeyDel, int32(keys[sdl.SCANCODE_DELETE]))
+	NkInputKey(ctx, KeyEnter, int32(keys[sdl.SCANCODE_RETURN]))
+	NkInputKey(ctx, KeyTab, int32(keys[sdl.SCANCODE_TAB]))
+	NkInputKey(ctx, KeyBackspace, int32(keys[sdl.SCANCODE_BACKSPACE]))
+	NkInputKey(ctx, KeyUp, int32(keys[sdl.SCANCODE_UP]))
+	NkInputKey(ctx, KeyDown, int32(keys[sdl.SCANCODE_DOWN]))
+	NkInputKey(ctx, KeyTextStart, int32(keys[sdl.SCANCODE_HOME]))
+	NkInputKey(ctx, KeyTextEnd, int32(keys[sdl.SCANCODE_END]))
+	NkInputKey(ctx, KeyScrollStart, int32(keys[sdl.SCANCODE_HOME]))
+	NkInputKey(ctx, KeyScrollEnd, int32(keys[sdl.SCANCODE_END]))
+	NkInputKey(ctx, KeyScrollUp, int32(keys[sdl.SCANCODE_PAGEUP]))
+	NkInputKey(ctx, KeyScrollDown, int32(keys[sdl.SCANCODE_PAGEDOWN]))
+
+	shiftHeld := int32(0)
+	if keys[sdl.KMOD_LSHIFT] == 1 || keys[sdl.KMOD_RSHIFT] == 1 {
+		shiftHeld = int32(1)
+	}
+	NkInputKey(ctx, KeyShift, shiftHeld)
+
+	controlHeld := false
+	if keys[sdl.KMOD_LCTRL] == 1 || keys[sdl.KMOD_RCTRL] == 1 {
+		controlHeld = true
+	}
+
+	if controlHeld {
+		NkInputKey(ctx, KeyCopy, int32(keys[sdl.SCANCODE_C]))
+		NkInputKey(ctx, KeyPaste, int32(keys[sdl.SCANCODE_V]))
+		NkInputKey(ctx, KeyCut, int32(keys[sdl.SCANCODE_X]))
+		NkInputKey(ctx, KeyTextUndo, int32(keys[sdl.SCANCODE_Z]))
+		NkInputKey(ctx, KeyTextRedo, int32(keys[sdl.SCANCODE_R]))
+		NkInputKey(ctx, KeyTextWordLeft, int32(keys[sdl.SCANCODE_LEFT]))
+		NkInputKey(ctx, KeyTextWordRight, int32(keys[sdl.SCANCODE_RIGHT]))
+		NkInputKey(ctx, KeyTextLineStart, int32(keys[sdl.SCANCODE_B]))
+		NkInputKey(ctx, KeyTextLineEnd, int32(keys[sdl.SCANCODE_E]))
+	} else {
+		NkInputKey(ctx, KeyLeft, int32(keys[sdl.SCANCODE_LEFT]))
+		NkInputKey(ctx, KeyRight, int32(keys[sdl.SCANCODE_RIGHT]))
+		NkInputKey(ctx, KeyCopy, 0)
+		NkInputKey(ctx, KeyPaste, 0)
+		NkInputKey(ctx, KeyCut, 0)
+		NkInputKey(ctx, KeyShift, 0)
+	}
+
+	x, y, mouseState := sdl.GetMouseState()
+	NkInputMotion(ctx, int32(x), int32(y))
 	// if m := ctx.Input().Mouse(); m.Grabbed() {
 	// 	prevX, prevY := m.Prev()
 	// 	win.SetCursorPos(float64(prevX), float64(prevY))
 	// 	m.SetPos(prevX, prevY)
 	// }
 
-	// NkInputButton(ctx, ButtonLeft, int32(x), int32(y), buttonPressed(win, glfw.MouseButtonLeft))
-	// NkInputButton(ctx, ButtonMiddle, int32(x), int32(y), buttonPressed(win, glfw.MouseButtonMiddle))
-	// NkInputButton(ctx, ButtonRight, int32(x), int32(y), buttonPressed(win, glfw.MouseButtonRight))
+	NkInputButton(ctx, ButtonLeft, int32(x), int32(y), int32(mouseState&sdl.ButtonLMask()))
+	NkInputButton(ctx, ButtonMiddle, int32(x), int32(y), int32(mouseState&sdl.ButtonMMask()))
+	NkInputButton(ctx, ButtonRight, int32(x), int32(y), int32(mouseState&sdl.ButtonRMask()))
+
 	NkInputScroll(ctx, state.scroll)
 	NkInputEnd(ctx)
 	state.text = ""
@@ -181,26 +191,3 @@ func NkPlatformDisplayHandle() *sdl.Window {
 	}
 	return nil
 }
-
-// func keyPressed(win *sdl.Window, key glfw.Key) int32 {
-// 	if win.GetKey(key) == glfw.Press {
-// 		return 1
-// 	}
-// 	return 0
-// }
-
-// func buttonPressed(win *glfw.Window, button glfw.MouseButton) int32 {
-// 	if win.GetMouseButton(button) == glfw.Press {
-// 		return 1
-// 	}
-// 	return 0
-// }
-
-// func keysPressed(win *glfw.Window, keys ...glfw.Key) int32 {
-// 	for i := range keys {
-// 		if win.GetKey(keys[i]) == glfw.Press {
-// 			return 1
-// 		}
-// 	}
-// 	return 0
-// }
