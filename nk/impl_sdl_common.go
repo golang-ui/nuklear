@@ -39,17 +39,6 @@ func NkPlatformInit(win *sdl.Window, context sdl.GLContext, opt PlatformInitOpti
 	if opt == PlatformInstallCallbacks {
 		sdl.AddEventWatchFunc(textScrollCallback, state)
 	}
-	// if opt == PlatformInstallCallbacks {
-	// 	win.SetScrollCallback(func(w *glfw.Window, xoff float64, yoff float64) {
-	// 		state.scroll += float32(yoff)
-	// 	})
-	// 	win.SetCharCallback(func(w *glfw.Window, char rune) {
-	// 		if len(state.text) < 256 { // NK_GLFW_TEXT_MAX
-	// 			state.text += string(char)
-	// 		}
-	// 	})
-	// }
-
 	state.ctx = NewContext()
 	NkInitDefault(state.ctx, nil)
 	deviceCreate()
@@ -148,11 +137,11 @@ func NkPlatformNewFrame() {
 
 	x, y, mouseState := sdl.GetMouseState()
 	NkInputMotion(ctx, int32(x), int32(y))
-	// if m := ctx.Input().Mouse(); m.Grabbed() {
-	// 	prevX, prevY := m.Prev()
-	// 	win.SetCursorPos(float64(prevX), float64(prevY))
-	// 	m.SetPos(prevX, prevY)
-	// }
+	if m := ctx.Input().Mouse(); m.Grabbed() {
+		prevX, prevY := m.Prev()
+		win.WarpMouseInWindow(int(prevX), int(prevY))
+		m.SetPos(prevX, prevY)
+	}
 
 	NkInputButton(ctx, ButtonLeft, int32(x), int32(y), int32(mouseState&sdl.ButtonLMask()))
 	NkInputButton(ctx, ButtonMiddle, int32(x), int32(y), int32(mouseState&sdl.ButtonMMask()))
