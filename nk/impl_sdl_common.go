@@ -23,8 +23,22 @@ const (
 	PlatformInstallCallbacks
 )
 
+func textScrollCallback(e sdl.Event, userdata interface{}) bool {
+	state := userdata.(*platformState)
+	switch t := e.(type) {
+	case *sdl.MouseWheelEvent:
+		state.scroll += float32(t.Y)
+	case *sdl.KeyDownEvent:
+		state.text += sdl.GetKeyName(sdl.GetKeyFromScancode(t.Keysym.Scancode))
+	}
+	return true
+}
+
 func NkPlatformInit(win *sdl.Window, context sdl.GLContext, opt PlatformInitOption) *Context {
 	state.win = win
+	if opt == PlatformInstallCallbacks {
+		sdl.AddEventWatchFunc(textScrollCallback, state)
+	}
 	// if opt == PlatformInstallCallbacks {
 	// 	win.SetScrollCallback(func(w *glfw.Window, xoff float64, yoff float64) {
 	// 		state.scroll += float32(yoff)
