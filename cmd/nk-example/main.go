@@ -76,11 +76,12 @@ func main() {
 			close(doneC)
 			return
 		case <-fpsTicker.C:
-			// if win.ShouldClose() {
-			// 	close(exitC)
-			// 	continue
-			// }
-			// glfw.PollEvents()
+			for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
+				switch event.(type) {
+				case *sdl.QuitEvent:
+					close(exitC)
+				}
+			}
 			gfxMain(win, ctx, state)
 		}
 	}
