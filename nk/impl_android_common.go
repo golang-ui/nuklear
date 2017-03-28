@@ -1,4 +1,5 @@
 // +build android
+// +build !sdl2
 
 package nk
 
