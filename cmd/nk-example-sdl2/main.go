@@ -33,6 +33,10 @@ func main() {
 	}
 	defer win.Destroy()
 
+	sdl.GL_SetAttribute(sdl.GL_CONTEXT_MAJOR_VERSION, 3)
+	sdl.GL_SetAttribute(sdl.GL_CONTEXT_MINOR_VERSION, 2)
+	sdl.GL_SetAttribute(sdl.GL_CONTEXT_PROFILE_MASK, sdl.GL_CONTEXT_PROFILE_CORE)
+
 	context, err := sdl.GL_CreateContext(win)
 	if err != nil {
 		closer.Fatalln(err)
