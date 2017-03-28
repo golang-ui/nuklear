@@ -82,7 +82,7 @@ gcc version 5.3.0 (GCC)
 $ go install github.com/golang-ui/nuklear/nk
 ```
 
-Hint: use `-tags sdl2` to run with SDL2 instead of GLFW.
+Hint: use `-tags sdl2` to run with SDL2 instead of GLFW. SDL2 requires additional installation process, see [SDL2](https://github.com/veandco/go-sdl2). Use GLFW if you want to stay go-get-able.
 
 ### Android demo
 
