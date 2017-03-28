@@ -1,5 +1,5 @@
 // +build opengl2
-// +build !sdl2
+// +build sdl2
 
 package nk
 
@@ -9,7 +9,7 @@ package nk
 #include <string.h>
 
 #define NK_IMPLEMENTATION
-#define NK_GLFW_GL2_IMPLEMENTATION
+#define NK_SDL2_GL2_IMPLEMENTATION
 
 #include "nuklear.h"
 */

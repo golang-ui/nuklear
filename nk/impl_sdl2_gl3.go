@@ -1,6 +1,6 @@
 // +build !android
 // +build !opengl2
-// +build !sdl2
+// +build sdl2
 
 package nk
 
@@ -10,7 +10,7 @@ package nk
 #include <string.h>
 
 #define NK_IMPLEMENTATION
-#define NK_GLFW_GL3_IMPLEMENTATION
+#define NK_SDL2_GL3_IMPLEMENTATION
 
 #include "nuklear.h"
 */

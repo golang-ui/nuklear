@@ -47,7 +47,7 @@ Supported platforms are:
 * Linux
 * Android
 
-The desktop support is achieved using [GLFW](https://github.com/go-gl/glfw) and there are backends written in Go for OpenGL 2.1 and OpenGL 3.2.
+The desktop support is achieved using [GLFW](https://github.com/go-gl/glfw) and there are backends written in Go for OpenGL 2.1 and OpenGL 3.2. Thanks to [strangebroadcasts](https://github.com/strangebroadcasts) it also has [SDL2](github.com/veandco/go-sdl2) support now.
 
 Android support is added using the [android-go](http://github.com/xlab/android-go) project, there is a corresponding backend for OpenGL ES 2.0 or 3.0 surface and input handling logic. Sophisticated things like scroll gestures will be added later.
 
@@ -82,6 +82,7 @@ gcc version 5.3.0 (GCC)
 $ go install github.com/golang-ui/nuklear/nk
 ```
 
+Hint: use `-tags sdl2` to run with SDL2 instead of GLFW. SDL2 requires additional installation process, see [SDL2](https://github.com/veandco/go-sdl2). Use GLFW if you want to stay go-get-able.
 
 ### Android demo
 

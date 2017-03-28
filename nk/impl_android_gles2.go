@@ -1,5 +1,6 @@
 // +build android
 // +build gles2
+// +build !sdl2
 
 package nk
 
