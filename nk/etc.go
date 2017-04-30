@@ -54,8 +54,8 @@ func (mouse *Mouse) Ungrab() bool {
 	return mouse.ungrab == True
 }
 
-func (mouse *Mouse) ScrollDelta() int32 {
-	return (int32)(mouse.scroll_delta)
+func (mouse *Mouse) ScrollDelta() Vec2 {
+	return (Vec2)(mouse.scroll_delta)
 }
 
 func (mouse *Mouse) Pos() (int32, int32) {
@@ -201,6 +201,19 @@ func (v *Vec2) X() float32 {
 
 func (v *Vec2) Y() float32 {
 	return (float32)(v.y)
+}
+
+func (v *Vec2) SetX(x float32) {
+	v.x = (C.float)(x)
+}
+
+func (v *Vec2) SetY(y float32) {
+	v.y = (C.float)(y)
+}
+
+func (v *Vec2) Reset() {
+	v.x = 0
+	v.y = 0
 }
 
 // Allocated is the total amount of memory allocated.
