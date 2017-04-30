@@ -28,7 +28,8 @@ func textScrollCallback(e sdl.Event, userdata interface{}) bool {
 	state := userdata.(*platformState)
 	switch t := e.(type) {
 	case *sdl.MouseWheelEvent:
-		state.scroll += float32(t.Y)
+		state.scroll.SetX(state.scroll.X() + float32(t.X))
+		state.scroll.SetY(state.scroll.Y() + float32(t.Y))
 	case *sdl.KeyDownEvent:
 		state.text += sdl.GetKeyName(sdl.GetKeyFromScancode(t.Keysym.Scancode))
 	}
@@ -151,7 +152,7 @@ func NkPlatformNewFrame() {
 	NkInputScroll(ctx, state.scroll)
 	NkInputEnd(ctx)
 	state.text = ""
-	state.scroll = 0
+	state.scroll.Reset()
 }
 
 var (

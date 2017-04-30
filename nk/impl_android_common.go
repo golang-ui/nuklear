@@ -202,7 +202,7 @@ type platformState struct {
 	fbScaleY float32
 
 	text   string
-	scroll float32
+	scroll Vec2
 }
 
 func newPlatformState() *platformState {

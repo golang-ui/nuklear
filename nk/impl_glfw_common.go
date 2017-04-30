@@ -28,7 +28,8 @@ func NkPlatformInit(win *glfw.Window, opt PlatformInitOption) *Context {
 	state.win = win
 	if opt == PlatformInstallCallbacks {
 		win.SetScrollCallback(func(w *glfw.Window, xoff float64, yoff float64) {
-			state.scroll += float32(yoff)
+			state.scroll.SetX(state.scroll.X() + float32(xoff))
+			state.scroll.SetY(state.scroll.Y() + float32(yoff))
 		})
 		win.SetCharCallback(func(w *glfw.Window, char rune) {
 			if len(state.text) < 256 { // NK_GLFW_TEXT_MAX
@@ -138,7 +139,7 @@ func NkPlatformNewFrame() {
 	NkInputScroll(ctx, state.scroll)
 	NkInputEnd(ctx)
 	state.text = ""
-	state.scroll = 0
+	state.scroll.Reset()
 }
 
 var (
@@ -173,7 +174,7 @@ type platformState struct {
 	fbScaleY float32
 
 	text   string
-	scroll float32
+	scroll Vec2
 }
 
 func NkPlatformDisplayHandle() *glfw.Window {
