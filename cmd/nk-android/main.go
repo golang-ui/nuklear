@@ -9,7 +9,7 @@ import (
 	"github.com/golang-ui/nuklear/nk"
 	"github.com/xlab/android-go/android"
 	"github.com/xlab/android-go/app"
-	gl "github.com/xlab/android-go/gles3"
+	gl "github.com/xlab/android-go/gles2"
 )
 
 func init() {
@@ -123,7 +123,7 @@ func main() {
 					initPt()
 					atlas := nk.NewFontAtlas()
 					nk.NkFontStashBegin(&atlas)
-					sansFont := nk.NkFontAtlasAddFromBytes(atlas, MustAsset("assets/DroidSans.ttf"), 20*pt, nil)
+					sansFont := nk.NkFontAtlasAddFromFile(atlas, "/system/fonts/DroidSans.ttf", 20*pt, nil)
 					// defaultFont := nk.NkFontAtlasAddDefault(atlas, 16*pt, nil)
 					nk.NkFontStashEnd()
 					if sansFont != nil {
@@ -275,4 +275,11 @@ type State struct {
 	prop    int32
 	opt     Option
 	times   int
+}
+
+func flag(v bool) int32 {
+	if v {
+		return 1
+	}
+	return 0
 }
