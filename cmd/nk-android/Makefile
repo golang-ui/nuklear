@@ -1,9 +1,9 @@
 ARCH ?= arm
 API ?= 22
-TOOLS := toolchain-$(API)-$(ARCH)
+TOOLS := toolchain-$(API)/$(ARCH)
 TOOLS_DIR ?= $(shell pwd)/$(TOOLS)
 ANDROID_SYSROOT = $(NDK)/platforms/android-$(API)/arch-$(ARCH)
-GLES_VER ?= gles2
+GLES_VER ?= gles3 # x86 emulator only supported gles2 as of june'17
 
 ifeq ($(ARCH),arm)
   ABI  := armeabi-v7a
@@ -25,11 +25,6 @@ else ifeq ($(ARCH),x86_64)
   GOCC := x86_64-linux-android
   GOAR := amd64
   GOFL := -march=bonnell
-endif
-
-ADFL := -e
-ifeq ($(findstring x86,$(ABI)),)
-  ADFL := -d
 endif
 
 all: $(TOOLS) build
@@ -60,9 +55,9 @@ clean:
 purge: clean
 	rm -rf toolchain*
 
-install:
-	cd android && make ADFL=$(ADFL) install
+install%:
+	cd android && make ADFL=-$* install
 
-listen:
-	@adb $(ADFL) logcat -c
-	@adb $(ADFL) logcat '*:E' NuklearActivity
+listen%:
+	@adb -$* logcat -c
+	@adb -$* logcat '*:E' NuklearActivity

@@ -55,9 +55,9 @@ $ make apk # pack all into an apk
 $ make clean # to delete compiled parts
 $ make purge # to start from scratch
 
-$ make install # on phone
-$ make ARCH=x86 install # on emulator
+$ make installd # on phone
+$ make installe # on emulator
 
-$ make listen # debug info from phone
-$ make ARCH=x86 listen # debug info from emulator
+$ make listend # debug info from phone
+$ make listene # debug info from emulator
 ```
