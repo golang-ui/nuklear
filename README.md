@@ -35,7 +35,7 @@ of platform and render backends it only focuses on the actual UI.
 
 <img src="https://cl.ly/311k1R011T1K/nk-arch.png" alt="nuklear golang architecture" width="400"/>
 
-Your Go application runs a loop where it handles input from the platform and manages the rendering backend. It uses Nuklear API bindings (the `nk` package) to run UI commands for layout and event handling. Nuklear maintains a draw command list that is consumed by one of the rednering backends so the UI is displayed. In this case, a C program is being a middleman that does all the UI heavylifting for us, so we can focus on the application logic, event handling and drawing backends in Go.
+Your Go application runs a loop where it handles input from the platform and manages the rendering backend. It uses Nuklear API bindings (the `nk` package) to run UI commands for layout and event handling. Nuklear maintains a draw command list that is consumed by one of the rendering backends so the UI is displayed. In this case, a C program is being a middleman that does all the UI heavylifting for us, so we can focus on the application logic, event handling and drawing backends in Go.
 
 ### Installation of nk
 
