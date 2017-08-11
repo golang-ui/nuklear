@@ -47,7 +47,17 @@ Droid Sans font is packed using go-bindata and being linked statically on the co
 ### Running
 
 ```
-$ make
-$ make install
-$ make listen
+$ make # arm by default
+$ make ARCH=x86
+	# more architectures if you like (& it compiles;)
+$ make apk # pack all into an apk
+
+$ make clean # to delete compiled parts
+$ make purge # to start from scratch
+
+$ make installd # on phone
+$ make installe # on emulator
+
+$ make listend # debug info from phone
+$ make listene # debug info from emulator
 ```
