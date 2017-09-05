@@ -89,6 +89,9 @@ func NkPlatformRender(aa AntiAliasing, maxVertexBuffer, maxElementBuffer int) {
 		NkBufferInitDefault(vbuf)
 		NkBufferInitDefault(ebuf)
 		NkConvert(state.ctx, dev.cmds, vbuf, ebuf, config)
+		vbuf.Free()
+		ebuf.Free()
+		config.Free()
 
 		// setup vertex buffer pointer
 		vertices := uintptr(unsafe.Pointer(NkBufferMemoryConst(vbuf)))
