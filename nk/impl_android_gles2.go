@@ -215,9 +215,9 @@ func NkPlatformRender(aa AntiAliasing, maxVertexBuffer, maxElementBuffer int) {
 			LineAa:      aa,
 		}
 		NkConvert(state.ctx, dev.cmds, vbuf, ebuf, config)
-		vbuf.Free()
-		ebuf.Free()
-		config.Free()
+		// vbuf.Free()
+		// ebuf.Free()
+		// config.Free()
 
 		gl.BindBuffer(gl.ARRAY_BUFFER, dev.vbo[0])
 		gl.BufferSubData(gl.ARRAY_BUFFER, 0, vbuf.Allocated(), pVertices)
