@@ -1,4 +1,4 @@
-## Nuklear [![version-1.40.1](https://img.shields.io/badge/version-1.40.1-lightgrey.svg)](/CHANGELOG.txt) [![GoDoc](https://godoc.org/github.com/golang-ui/nuklear/nk?status.svg)](https://godoc.org/github.com/golang-ui/nuklear/nk)
+## Nuklear [![version-2.00.6](https://img.shields.io/badge/version-2.00.6-lightgrey.svg)](/CHANGELOG.txt) [![GoDoc](https://godoc.org/github.com/golang-ui/nuklear/nk?status.svg)](https://godoc.org/github.com/golang-ui/nuklear/nk)
 
 Package nk provides Go bindings for nuklear.h — a small ANSI C gui library. See [github.com/vurtun/nuklear](https://github.com/vurtun/nuklear).<br />
 All the binding code has automatically been generated with rules defined in [nk.yml](/nk.yml).
