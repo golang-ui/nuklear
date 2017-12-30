@@ -97,6 +97,10 @@ func NkFontAtlasAddFromBytes(atlas *FontAtlas, data []byte, height float32, conf
 	return NkFontAtlasAddFromMemory(atlas, dataPtr, Size(len(data)), height, config)
 }
 
+func (fc *FontConfig) SetRange(r *Rune) {
+	fc._range = (*C.nk_rune)(r)
+}
+
 func (h Handle) ID() int {
 	return int(*(*int64)(unsafe.Pointer(&h)))
 }
