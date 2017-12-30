@@ -101,6 +101,11 @@ func (fc *FontConfig) SetRange(r *Rune) {
 	fc._range = (*C.nk_rune)(r)
 }
 
+func (fc *FontConfig) SetOversample(v, h int) {
+	fc.oversample_v = (C.uchar)(v)
+	fc.oversample_h = (C.uchar)(h)
+}
+
 func (h Handle) ID() int {
 	return int(*(*int64)(unsafe.Pointer(&h)))
 }
