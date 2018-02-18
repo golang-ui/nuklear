@@ -30,7 +30,7 @@ func textScrollCallback(e sdl.Event, userdata interface{}) bool {
 	case *sdl.MouseWheelEvent:
 		state.scroll.SetX(state.scroll.X() + float32(t.X))
 		state.scroll.SetY(state.scroll.Y() + float32(t.Y))
-	case *sdl.KeyDownEvent:
+	case *sdl.KeyboardEvent:
 		state.text += sdl.GetKeyName(sdl.GetKeyFromScancode(t.Keysym.Scancode))
 	}
 	return true
