@@ -116,7 +116,7 @@ func NkPlatformRender(aa AntiAliasing, maxVertexBuffer, maxElementBuffer int) {
 			gl.BindTexture(gl.TEXTURE_2D, uint32(cmd.Texture().ID()))
 			gl.Scissor(
 				int32(clipRect.X()*state.fbScaleX),
-				int32(float32(state.height-int(clipRect.Y()+clipRect.H()))*state.fbScaleY),
+				int32(float32(state.height-int32(clipRect.Y()+clipRect.H()))*state.fbScaleY),
 				int32(clipRect.W()*state.fbScaleX),
 				int32(clipRect.H()*state.fbScaleY),
 			)

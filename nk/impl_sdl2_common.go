@@ -30,7 +30,7 @@ func textScrollCallback(e sdl.Event, userdata interface{}) bool {
 	case *sdl.MouseWheelEvent:
 		state.scroll.SetX(state.scroll.X() + float32(t.X))
 		state.scroll.SetY(state.scroll.Y() + float32(t.Y))
-	case *sdl.KeyDownEvent:
+	case *sdl.KeyboardEvent:
 		state.text += sdl.GetKeyName(sdl.GetKeyFromScancode(t.Keysym.Scancode))
 	}
 	return true
@@ -141,7 +141,7 @@ func NkPlatformNewFrame() {
 	NkInputMotion(ctx, int32(x), int32(y))
 	if m := ctx.Input().Mouse(); m.Grabbed() {
 		prevX, prevY := m.Prev()
-		win.WarpMouseInWindow(int(prevX), int(prevY))
+		win.WarpMouseInWindow(int32(prevX), int32(prevY))
 		m.SetPos(prevX, prevY)
 	}
 
@@ -174,10 +174,10 @@ const (
 type platformState struct {
 	win *sdl.Window
 
-	width          int
-	height         int
-	display_width  int
-	display_height int
+	width          int32
+	height         int32
+	display_width  int32
+	display_height int32
 
 	ogl   *platformDevice
 	ctx   *Context
