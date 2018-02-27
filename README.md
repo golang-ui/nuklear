@@ -102,7 +102,7 @@ $ make listen
 
 [Click for video](https://www.youtube.com/watch?v=3-MiceegZlM)
 
-### Destop demo
+### Desktop demo
 
 There is an example app [nk-example](https://github.com/golang-ui/nuklear/blob/master/cmd/nk-example/main.go) that shows the usage of Nuklear GUI library, based on the official demos.
 
