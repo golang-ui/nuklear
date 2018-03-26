@@ -53,6 +53,14 @@ Android support is added using the [android-go](http://github.com/xlab/android-g
 
 #### Desktop installation
 
+Linux dependencies: (Header files required for GLFW)
+
+```
+# apt install xorg-dev
+```
+
+After that, standard `go get` should work:
+
 ```
 $ go get github.com/golang-ui/nuklear/nk
 ```
