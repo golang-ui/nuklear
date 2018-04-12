@@ -60,6 +60,7 @@ TRANSLATOR:
       - {target: "^nk_stroke_polygon$", tips: [sref,arr,size,0,0]}
       - {target: "^nk_stroke_polyline$", tips: [sref,arr,size,0,0]}
       - {target: "^nk_fill_polygon$", tips: [sref,arr,size,0,0]}
+      - {target: "^nk_draw_text$", tips: [sref,0,0,0,sref,sref,sref]}
       - {target: "nk_", tips: [sref,sref,sref,sref]} # defaults
   Rules:
     global:
