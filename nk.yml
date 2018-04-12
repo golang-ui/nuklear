@@ -57,6 +57,9 @@ TRANSLATOR:
       - {target: "_font_atlas_add_from_memory$", tips: [ref,ref,size,0,ref]}
       - {target: "_convert$", tips: [ref,ref,ref,ref,ref]}
       - {target: "^nk_style_from_table$", tips: [sref,arr]}
+      - {target: "^nk_stroke_polygon$", tips: [sref,arr,size,0,0]}
+      - {target: "^nk_stroke_polyline$", tips: [sref,arr,size,0,0]}
+      - {target: "^nk_fill_polygon$", tips: [sref,arr,size,0,0]}
       - {target: "nk_", tips: [sref,sref,sref,sref]} # defaults
   Rules:
     global:
