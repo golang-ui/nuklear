@@ -54,6 +54,14 @@ func (input *Input) Mouse() *Mouse {
 	return (*Mouse)(&input.mouse)
 }
 
+func (input *Input) Keyboard() *Keyboard {
+	return (*Keyboard)(&input.keyboard)
+}
+
+func (keyboard *Keyboard) Text() string {
+	return C.GoStringN(&keyboard.text[0], keyboard.text_len)
+}
+
 func (mouse *Mouse) Grab() bool {
 	return mouse.grab == True
 }
