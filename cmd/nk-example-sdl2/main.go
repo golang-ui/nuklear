@@ -37,7 +37,7 @@ func main() {
 	sdl.GLSetAttribute(sdl.GL_CONTEXT_MINOR_VERSION, 2)
 	sdl.GLSetAttribute(sdl.GL_CONTEXT_PROFILE_MASK, sdl.GL_CONTEXT_PROFILE_CORE)
 
-	context, err := sdl.GLCreateContext(win)
+	context, err := win.GLCreateContext()
 	if err != nil {
 		closer.Fatalln(err)
 	}
@@ -150,7 +150,7 @@ func gfxMain(win *sdl.Window, ctx *nk.Context, state *State) {
 	gl.Clear(gl.COLOR_BUFFER_BIT)
 	gl.ClearColor(bg[0], bg[1], bg[2], bg[3])
 	nk.NkPlatformRender(nk.AntiAliasingOn, maxVertexBuffer, maxElementBuffer)
-	sdl.GLSwapWindow(win)
+	win.GLSwap()
 }
 
 type Option uint8
