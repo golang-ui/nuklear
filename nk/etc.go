@@ -291,3 +291,27 @@ func (l *ListView) Count() int {
 func (panel *Panel) Bounds() *Rect {
 	return (*Rect)(&panel.bounds)
 }
+
+func (t *StyleText) Color() *Color {
+	return (*Color)(&t.color)
+}
+
+func (s *Style) Text() *StyleText {
+	return (*StyleText)(&s.text)
+}
+
+func (s *Style) Window() *StyleWindow {
+    return (*StyleWindow)(&s.window)
+}
+
+func (w *StyleWindow) Background() *Color {
+	return (*Color)(&w.background)
+}
+
+func SetTextColor(ctx *Context, color Color) {
+	*ctx.Style().Text().Color() = color
+}
+
+func SetBackgroundColor(ctx *Context, color Color) {
+	ctx.Style().Window().fixed_background = C.struct_nk_style_item(NkStyleItemColor(color))
+}
