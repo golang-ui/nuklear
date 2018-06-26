@@ -96,6 +96,7 @@ func NkPlatformNewFrame() {
 
 	NkInputKey(ctx, KeyDel, keyPressed(win, glfw.KeyDelete))
 	NkInputKey(ctx, KeyEnter, keyPressed(win, glfw.KeyEnter))
+	NkInputKey(ctx, KeyEnter, keyPressed(win, glfw.KeyKPEnter))
 	NkInputKey(ctx, KeyTab, keyPressed(win, glfw.KeyTab))
 	NkInputKey(ctx, KeyBackspace, keyPressed(win, glfw.KeyBackspace))
 	NkInputKey(ctx, KeyUp, keyPressed(win, glfw.KeyUp))
