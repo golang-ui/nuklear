@@ -96,6 +96,7 @@ func NkPlatformNewFrame() {
 
 	NkInputKey(ctx, KeyDel, int32(keys[sdl.SCANCODE_DELETE]))
 	NkInputKey(ctx, KeyEnter, int32(keys[sdl.SCANCODE_RETURN]))
+	NkInputKey(ctx, KeyEnter, int32(keys[sdl.SCANCODE_KP_ENTER]))
 	NkInputKey(ctx, KeyTab, int32(keys[sdl.SCANCODE_TAB]))
 	NkInputKey(ctx, KeyBackspace, int32(keys[sdl.SCANCODE_BACKSPACE]))
 	NkInputKey(ctx, KeyUp, int32(keys[sdl.SCANCODE_UP]))
