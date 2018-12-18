@@ -151,6 +151,5 @@ func getGroupStatus(b int32) string {
 
 type State struct {
 	bgColor     nk.Color
-	prop        int32
 	groupStates []int32
 }

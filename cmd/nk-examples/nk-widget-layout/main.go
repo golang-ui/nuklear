@@ -204,15 +204,6 @@ func gfxMain(win *glfw.Window, ctx *nk.Context, state *State) {
 	win.SwapBuffers()
 }
 
-type Option uint8
-
-const (
-	Easy Option = 0
-	Hard Option = 1
-)
-
 type State struct {
 	bgColor nk.Color
-	prop    int32
-	opt     Option
 }
