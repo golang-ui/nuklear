@@ -9,7 +9,7 @@ Groups are basically windows inside windows. They allow to subdivide space in a 
 
 To create a group you have to call one of the three `nk.NkGroupBegin` functions to start group declarations and `nk.NkGroupEnd` at the end. Furthermore it is required to check the return value of `nk.NkGroupBegin` and only process widgets inside the window if the value is not 0. Nesting groups is possible and even encouraged since many layouting schemes can only be achieved by nesting. Groups, unlike windows, need `nk.NkGroupEnd` to be only called if the corosponding `nk.NkGroupBegin` call does not return 0.
 Note that group names should be unique.
-//TODO
+
 ## Install
 Make sure, that the following packages are installed
   - github.com/go-gl/gl/v3.2-core/gl
