@@ -53,11 +53,18 @@ Android support is added using the [android-go](http://github.com/xlab/android-g
 
 #### Desktop installation
 
-Linux dependencies: (Header files required for GLFW)
+Debian/Ubuntu dependencies: (Header files required for GLFW)
 
 ```
 # apt install xorg-dev
 ```
+
+Fedora(tested on 28):
+
+```
+# libX11-devel libXcursor-devel libXrandr-devel libXinerama-devel mesa-libGL-devel libXi-devel
+```
+
 
 After that, standard `go get` should work:
 
