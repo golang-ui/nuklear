@@ -6,6 +6,7 @@ GENERATOR:
   Includes: ["nuklear.h"]
   Options:
     SafeStrings: true
+    StructAccessors: true
 
 PARSER:
   IncludePaths: ["/usr/include", "/usr/local/include"]
