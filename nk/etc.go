@@ -2,18 +2,6 @@ package nk
 
 /*
 #include "nuklear.h"
-
-const nk_rune nk_font_japanese_glyph_ranges[] = {
-    0x0020, 0x00FF,
-    0x2200, 0x22FF, // Mathematical Operators
-    0x3000, 0x303F, // CJK Symbols and Punctuation
-    0x3040, 0x309F, // Hiragana
-    0x30A0, 0x30FF, // Katakana
-    0x0370, 0x03FF, // Greek and Coptic
-    0xFF00, 0xFFEF, // Halfwidth and Fullwidth Forms
-    0x4E00, 0x9FFF, // CJK Unified Ideographs
-    0
-};
 */
 import "C"
 import "unsafe"
@@ -117,12 +105,6 @@ func NkFontAtlasAddFromBytes(atlas *FontAtlas, data []byte, height float32, conf
 	return NkFontAtlasAddFromMemory(atlas, dataPtr, Size(len(data)), height, config)
 }
 
-func NkFontJapaneseGlyphRanges() *Rune {
-	__ret := &(C.nk_font_japanese_glyph_ranges[0])
-	__v := *(**Rune)(unsafe.Pointer(&__ret))
-	return __v
-}
-
 func (fc *FontConfig) SetPixelSnap(b bool) {
 	var i int
 	if b {
@@ -140,6 +122,10 @@ func (fc *FontConfig) SetOversample(v, h int) {
 
 func (fc *FontConfig) SetRange(r *Rune) {
 	fc._range = (*C.nk_rune)(r)
+}
+
+func (fc *FontConfig) SetRangeGoRune(r []rune) {
+	fc._range = (*C.nk_rune)(unsafe.Pointer(&r[0]))
 }
 
 func (h Handle) ID() int {
