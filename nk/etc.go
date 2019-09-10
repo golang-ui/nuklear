@@ -9,6 +9,37 @@ import (
 	"unsafe"
 )
 
+var (
+	clipboardPlugin ClipboardPlugin
+)
+
+type ClipboardPlugin interface {
+	GetText() (string, error)
+	SetText(content string)
+}
+
+//export igClipboardPaste
+func igClipboardPaste(user C.nk_handle, edit *TextEdit) {
+	if clipboardPlugin != nil {
+		content, err := clipboardPlugin.GetText()
+		if err == nil {
+			NkTexteditPaste(edit, content, int32(len(content)))
+		}
+	}
+}
+
+//export igClipboardCopy
+func igClipboardCopy(user C.nk_handle, text *C.char, len C.int) {
+	if clipboardPlugin != nil {
+		clipboardPlugin.SetText(C.GoStringN(text, len))
+	}
+}
+
+func (ctx *Context) SetClipboard(board ClipboardPlugin) {
+	clipboardPlugin = board
+	NkRegisterClipboard(ctx)
+}
+
 func (ctx *Context) Input() *Input {
 	return (*Input)(&ctx.input)
 }
