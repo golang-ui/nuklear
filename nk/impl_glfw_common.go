@@ -24,6 +24,22 @@ const (
 	PlatformInstallCallbacks
 )
 
+type NkGLFWClipbard struct {
+	window *glfw.Window
+}
+
+func NewGLFWClipboard(w *glfw.Window) *NkGLFWClipbard {
+	return &NkGLFWClipbard{w}
+}
+
+func (c *NkGLFWClipbard) SetText(content string) {
+	c.window.SetClipboardString(content)
+}
+
+func (c *NkGLFWClipbard) GetText() (string, error) {
+	return c.window.GetClipboardString()
+}
+
 func NkPlatformInit(win *glfw.Window, opt PlatformInitOption) *Context {
 	state.win = win
 	if opt == PlatformInstallCallbacks {
@@ -41,12 +57,10 @@ func NkPlatformInit(win *glfw.Window, opt PlatformInitOption) *Context {
 	state.ctx = NewContext()
 	NkInitDefault(state.ctx, nil)
 	deviceCreate()
-	return state.ctx
 
-	// TODO(xlab): clipboard
-	// state.ctx.clip.copy = nk_glfw3_clipbard_copy;
-	// state.ctx.clip.paste = nk_glfw3_clipbard_paste;
-	// state.ctx.clip.userdata = nk_handle_ptr(0);
+	state.ctx.SetClipboard(NewGLFWClipboard(win))
+
+	return state.ctx
 }
 
 func NkPlatformShutdown() {
@@ -108,7 +122,7 @@ func NkPlatformNewFrame() {
 	NkInputKey(ctx, KeyScrollUp, keyPressed(win, glfw.KeyPageUp))
 	NkInputKey(ctx, KeyScrollDown, keyPressed(win, glfw.KeyPageDown))
 	NkInputKey(ctx, KeyShift, keysPressed(win, glfw.KeyLeftShift, glfw.KeyRightShift))
-	if keysPressed(win, glfw.KeyLeftControl, glfw.KeyRightControl) > 0 {
+	if keysPressed(win, glfw.KeyLeftControl, glfw.KeyRightControl, glfw.KeyLeftSuper, glfw.KeyRightSuper) > 0 {
 		NkInputKey(ctx, KeyCopy, keyPressed(win, glfw.KeyC))
 		NkInputKey(ctx, KeyPaste, keyPressed(win, glfw.KeyV))
 		NkInputKey(ctx, KeyCut, keyPressed(win, glfw.KeyX))
@@ -118,6 +132,7 @@ func NkPlatformNewFrame() {
 		NkInputKey(ctx, KeyTextWordRight, keyPressed(win, glfw.KeyRight))
 		NkInputKey(ctx, KeyTextLineStart, keyPressed(win, glfw.KeyB))
 		NkInputKey(ctx, KeyTextLineEnd, keyPressed(win, glfw.KeyE))
+		NkInputKey(ctx, KeyTextSelectAll, keyPressed(win, glfw.KeyA))
 	} else {
 		NkInputKey(ctx, KeyLeft, keyPressed(win, glfw.KeyLeft))
 		NkInputKey(ctx, KeyRight, keyPressed(win, glfw.KeyRight))

@@ -4,7 +4,41 @@ package nk
 #include "nuklear.h"
 */
 import "C"
-import "unsafe"
+import (
+	"bytes"
+	"unsafe"
+)
+
+var (
+	clipboardPlugin ClipboardPlugin
+)
+
+type ClipboardPlugin interface {
+	GetText() (string, error)
+	SetText(content string)
+}
+
+//export igClipboardPaste
+func igClipboardPaste(user C.nk_handle, edit *TextEdit) {
+	if clipboardPlugin != nil {
+		content, err := clipboardPlugin.GetText()
+		if err == nil {
+			NkTexteditPaste(edit, content, int32(len(content)))
+		}
+	}
+}
+
+//export igClipboardCopy
+func igClipboardCopy(user C.nk_handle, text *C.char, len C.int) {
+	if clipboardPlugin != nil {
+		clipboardPlugin.SetText(C.GoStringN(text, len))
+	}
+}
+
+func (ctx *Context) SetClipboard(board ClipboardPlugin) {
+	clipboardPlugin = board
+	NkRegisterClipboard(ctx)
+}
 
 func (ctx *Context) Input() *Input {
 	return (*Input)(&ctx.input)
@@ -324,4 +358,11 @@ func SetTextColor(ctx *Context, color Color) {
 
 func SetBackgroundColor(ctx *Context, color Color) {
 	ctx.Style().Window().fixed_background = C.struct_nk_style_item(NkStyleItemColor(color))
+}
+
+func (t *TextEdit) GetGoString() string {
+	nkstr := t.GetString()
+	b := C.GoBytes(*nkstr.GetBuffer().GetMemory().GetPtr(), C.int(*nkstr.GetBuffer().GetSize()))
+	r := bytes.Runes(b)[:*nkstr.GetLen()]
+	return string(r)
 }
