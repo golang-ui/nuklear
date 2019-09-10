@@ -1,13 +1,14 @@
 package main
 
 import (
+	"C"
 	"log"
 	"runtime"
 	"time"
 
+	"github.com/AllenDang/nuklear/nk"
 	"github.com/go-gl/gl/v3.2-core/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
-	"github.com/golang-ui/nuklear/nk"
 	"github.com/xlab/closer"
 )
 
@@ -116,7 +117,7 @@ func gfxMain(win *glfw.Window, ctx *nk.Context, state *State) {
 		{
 			nk.NkEditBuffer(ctx, nk.EditField, &state.text, nk.NkFilterAscii)
 			if nk.NkButtonLabel(ctx, "Print Entered Text") > 0 {
-				log.Println(nk.NkStrGetConst(state.text.GetString()))
+				log.Println(state.text.GetGoString())
 			}
 		}
 		nk.NkLayoutRowDynamic(ctx, 25, 1)
@@ -134,7 +135,7 @@ func gfxMain(win *glfw.Window, ctx *nk.Context, state *State) {
 				nk.NkLayoutRowDynamic(ctx, 120, 1)
 				cf := nk.NkColorCf(state.bgColor)
 				cf = nk.NkColorPicker(ctx, cf, nk.ColorFormatRGBA)
-				state.bgColor = nk.NkRgbaCf(cf)
+				state.bgColor = nk.NkRgbCf(cf)
 				nk.NkLayoutRowDynamic(ctx, 25, 1)
 				r, g, b, a := state.bgColor.RGBAi()
 				r = nk.NkPropertyi(ctx, "#R:", 0, r, 255, 1, 1)

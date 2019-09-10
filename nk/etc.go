@@ -4,7 +4,9 @@ package nk
 #include "nuklear.h"
 */
 import "C"
-import "unsafe"
+import (
+	"unsafe"
+)
 
 func (ctx *Context) Input() *Input {
 	return (*Input)(&ctx.input)
@@ -324,4 +326,9 @@ func SetTextColor(ctx *Context, color Color) {
 
 func SetBackgroundColor(ctx *Context, color Color) {
 	ctx.Style().Window().fixed_background = C.struct_nk_style_item(NkStyleItemColor(color))
+}
+
+func (t *TextEdit) GetGoString() string {
+	nkstr := t.GetString()
+	return string(C.GoBytes(*nkstr.GetBuffer().GetMemory().GetPtr(), C.int(NkStrLen(nkstr))))
 }
