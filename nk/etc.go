@@ -5,6 +5,7 @@ package nk
 */
 import "C"
 import (
+	"bytes"
 	"unsafe"
 )
 
@@ -330,5 +331,7 @@ func SetBackgroundColor(ctx *Context, color Color) {
 
 func (t *TextEdit) GetGoString() string {
 	nkstr := t.GetString()
-	return string(C.GoBytes(*nkstr.GetBuffer().GetMemory().GetPtr(), C.int(NkStrLen(nkstr))))
+	b := C.GoBytes(*nkstr.GetBuffer().GetMemory().GetPtr(), C.int(*nkstr.GetBuffer().GetSize()))
+	r := bytes.Runes(b)[:*nkstr.GetLen()]
+	return string(r)
 }
