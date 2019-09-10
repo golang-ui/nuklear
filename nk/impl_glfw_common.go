@@ -61,11 +61,6 @@ func NkPlatformInit(win *glfw.Window, opt PlatformInitOption) *Context {
 	state.ctx.SetClipboard(NewGLFWClipboard(win))
 
 	return state.ctx
-
-	// TODO(xlab): clipboard
-	// state.ctx.clip.copy = nk_glfw3_clipbard_copy;
-	// state.ctx.clip.paste = nk_glfw3_clipbard_paste;
-	// state.ctx.clip.userdata = nk_handle_ptr(0);
 }
 
 func NkPlatformShutdown() {
