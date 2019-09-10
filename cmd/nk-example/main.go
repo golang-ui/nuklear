@@ -66,6 +66,8 @@ func main() {
 	state := &State{
 		bgColor: nk.NkRgba(28, 48, 62, 255),
 	}
+	nk.NkTexteditInitDefault(&state.text)
+
 	fpsTicker := time.NewTicker(time.Second / 30)
 	for {
 		select {
@@ -110,6 +112,13 @@ func gfxMain(win *glfw.Window, ctx *nk.Context, state *State) {
 				state.opt = Hard
 			}
 		}
+		nk.NkLayoutRowDynamic(ctx, 30, 1)
+		{
+			nk.NkEditBuffer(ctx, nk.EditField, &state.text, nk.NkFilterAscii)
+			if nk.NkButtonLabel(ctx, "Print Entered Text") > 0 {
+				log.Println(nk.NkStrGetConst(state.text.GetString()))
+			}
+		}
 		nk.NkLayoutRowDynamic(ctx, 25, 1)
 		{
 			nk.NkPropertyInt(ctx, "Compression:", 0, &state.prop, 100, 10, 1)
@@ -123,7 +132,9 @@ func gfxMain(win *glfw.Window, ctx *nk.Context, state *State) {
 			size := nk.NkVec2(nk.NkWidgetWidth(ctx), 400)
 			if nk.NkComboBeginColor(ctx, state.bgColor, size) > 0 {
 				nk.NkLayoutRowDynamic(ctx, 120, 1)
-				state.bgColor = nk.NkColorPicker(ctx, state.bgColor, nk.ColorFormatRGBA)
+				cf := nk.NkColorCf(state.bgColor)
+				cf = nk.NkColorPicker(ctx, cf, nk.ColorFormatRGBA)
+				state.bgColor = nk.NkRgbaCf(cf)
 				nk.NkLayoutRowDynamic(ctx, 25, 1)
 				r, g, b, a := state.bgColor.RGBAi()
 				r = nk.NkPropertyi(ctx, "#R:", 0, r, 255, 1, 1)
@@ -159,6 +170,7 @@ type State struct {
 	bgColor nk.Color
 	prop    int32
 	opt     Option
+	text    nk.TextEdit
 }
 
 func onError(code int32, msg string) {
