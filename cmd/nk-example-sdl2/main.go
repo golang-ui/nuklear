@@ -128,7 +128,9 @@ func gfxMain(win *sdl.Window, ctx *nk.Context, state *State) {
 			size := nk.NkVec2(nk.NkWidgetWidth(ctx), 400)
 			if nk.NkComboBeginColor(ctx, state.bgColor, size) > 0 {
 				nk.NkLayoutRowDynamic(ctx, 120, 1)
-				state.bgColor = nk.NkColorPicker(ctx, state.bgColor, nk.ColorFormatRGBA)
+				cf := nk.NkColorCf(state.bgColor)
+				cf = nk.NkColorPicker(ctx, cf, nk.ColorFormatRGBA)
+				state.bgColor = nk.NkRgbCf(cf)
 				nk.NkLayoutRowDynamic(ctx, 25, 1)
 				r, g, b, a := state.bgColor.RGBAi()
 				r = nk.NkPropertyi(ctx, "#R:", 0, r, 255, 1, 1)
