@@ -147,6 +147,18 @@ $ make clean
 $ make
 ```
 
+### Building nuklear - Using vcpkg
+
+You can download and install nuklear using the [vcpkg](https://github.com/Microsoft/vcpkg) dependency manager:
+
+    git clone https://github.com/Microsoft/vcpkg.git
+    cd vcpkg
+    ./bootstrap-vcpkg.sh
+    ./vcpkg integrate install
+    ./vcpkg install nuklear
+
+The nuklear port in vcpkg is kept up to date by Microsoft team members and community contributors. If the version is out of date, please [create an issue or pull request](https://github.com/Microsoft/vcpkg) on the vcpkg repository.
+
 ### License
 
 All the code except when stated otherwise is licensed under the [MIT license](https://xlab.mit-license.org).
